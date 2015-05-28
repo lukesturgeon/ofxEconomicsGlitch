@@ -2,7 +2,10 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-
+    ofSetVerticalSync(true);
+	ofBackground(.15 * 255);
+	
+	glitch.loadVideo("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/DestructiveDestructionSecondtEdit.mp4");
 }
 
 //--------------------------------------------------------------
@@ -17,7 +20,9 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if (key == 'f') {
+		ofToggleFullscreen();
+	}
 }
 
 //--------------------------------------------------------------
