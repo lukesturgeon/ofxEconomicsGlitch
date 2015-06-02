@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
-#include "ofxTLVideoGlitch.h"
+#include "ofxEconomics.h"
 
 class ofApp : public ofBaseApp{
     
@@ -21,17 +21,31 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
-    ofxTLVideoGlitch* media;
-    bool isPlaying;
     
-    ofxIntSlider inner;
-    ofxIntSlider pack;
-    ofxFloatSlider widthPrc;
-    ofxFloatSlider heightPrc;
-    ofxPanel gui;
+    ofxEconomics            economics;
     
-    void setupGUI();
-	void togglePlay();
+    ofVideoPlayer           media;
+    bool                    isPlaying;
+    bool                    isFullscreen;
+    
+    ofParameterGroup        mediaSettingsA;
+    ofParameter<int>        innerA;
+    ofParameter<int>        packA;
+    ofParameter<float>      widthPrcA;
+    ofParameter<float>      heightPrcA;
+    ofParameter<ofColor>    tintA;
+    //
+    ofParameterGroup        mediaSettingsB;
+    ofParameter<int>        innerB;
+    ofParameter<int>        packB;
+    ofParameter<float>      widthPrcB;
+    ofParameter<float>      heightPrcB;
+    ofParameter<ofColor>    tintB;
+    //
+    ofxPanel                gui;
+    
+    void togglePlay();
 	void pause();
 	void play();
+    void drawGlitchedVideo(ofVideoPlayer & video, float width, float height, float innerFormat, float packFormat);
 };

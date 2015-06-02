@@ -41,18 +41,6 @@ int formats[] = {
     GL_LUMINANCE_ALPHA
 };
 
-void ofApp::setupGUI()
-{
-    int n1 = sizeof(internalFormats) / sizeof(int);
-    int n2 = sizeof(formats) / sizeof(int);
-    
-    gui.setup();
-    gui.add(inner.setup("internal", 0, 0, n1-1));
-    gui.add(pack.setup("format", 5, 0, n2-1));
-    gui.add(widthPrc.setup("width", 1.0f, 0.95f, 1.0f));
-    gui.add(heightPrc.setup("height", 1.0f, 0.0f, 1.0f));
-}
-
 void ofApp::togglePlay() {
 	if (isPlaying) {
 		pause();
@@ -63,12 +51,12 @@ void ofApp::togglePlay() {
 
 void ofApp::pause() {
     isPlaying = false;
-	media->pause();
+    media.setPaused(!isPlaying);
 }
 
 void ofApp::play() {
     isPlaying = true;
-	media->play();
+	media.setPaused(!isPlaying);
 }
 
 
@@ -79,46 +67,79 @@ void ofApp::setup()
     ofSetWindowTitle("Destructive Destruction");
     ofSetVerticalSync(true);
 	ofBackground(.15 * 255);
+    isFullscreen = false;
     
-    setupGUI();
+    // setup the economics numbers
     
-    isPlaying = true;
-
-    media = new ofxTLVideoGlitch();
-	media->load("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/DestructiveDestructionSecondtEdit.mp4");
-	media->play();
+    // Setup the GUI
+    int n1 = sizeof(internalFormats) / sizeof(int);
+    int n2 = sizeof(formats) / sizeof(int);
+    
+    mediaSettingsA.setName( "VIDEO A");
+    mediaSettingsA.add( innerA.set("internal", 0, 0, n1-1));
+    mediaSettingsA.add( packA.set("format", 5, 0, n2-1));
+    mediaSettingsA.add( widthPrcA.set("width", 1.0f, 0.95f, 1.0f));
+    mediaSettingsA.add( heightPrcA.set("height", 1.0f, 0.0f, 1.0f));
+    mediaSettingsA.add( tintA.set("tint", ofColor(255, 127), ofColor(0,0), ofColor(255)) );
+    
+    mediaSettingsB.setName( "VIDEO B");
+    mediaSettingsB.add( innerB.set("internal", 0, 0, n1-1));
+    mediaSettingsB.add( packB.set("format", 5, 0, n2-1));
+    mediaSettingsB.add( widthPrcB.set("width", 1.0f, 0.95f, 1.0f));
+    mediaSettingsB.add( heightPrcB.set("height", 1.0f, 0.0f, 1.0f));
+    mediaSettingsB.add( tintB.set("tint", ofColor(255), ofColor(0,0), ofColor(255)) );
+    
+    gui.setup();
+    gui.add(mediaSettingsA);
+    gui.add(mediaSettingsB);
+    
+    // Load the video file
+   	media.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/DestructiveDestructionFourthEdit.mp4");
+	play();
 }
 
 //--------------------------------------------------------------
 void ofApp::update()
 {
-	media->update();
+    economics.update();
+	media.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw()
 {
-    float innerFormat = internalFormats[ inner ];
-	float packFormat = formats[ pack ];
-	
-	
-	// set compression
-	//ofTexCompression compression;
-	//tex.setCompression(compression);
-	
-	media->draw(widthPrc, heightPrc, innerFormat, packFormat);
+    // draw the original video B
+    ofSetColor( tintB );
+    drawGlitchedVideo(media, widthPrcB, heightPrcB, internalFormats[ innerB ], formats[ packB ]);
     
-    ofSetColor(255);
-    ofDrawBitmapString(ofToString(ofGetFrameRate())+"fps", 20, ofGetHeight()-20);
-	   
-    gui.draw();
+    // draw the glitched video A
+    ofSetColor( tintA );
+    drawGlitchedVideo(media, widthPrcA, heightPrcA, internalFormats[ innerA ], formats[ packA ]);
+    
+    if( !isFullscreen ) {
+        ofSetColor(255);
+        ofDrawBitmapString(ofToString(ofGetFrameRate())+"fps", 20, ofGetHeight()-20);
+        
+        gui.draw();
+        economics.draw(20, 500);
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::drawGlitchedVideo(ofVideoPlayer & video, float width, float height, float innerFormat, float packFormat)
+{
+    ofTexture tex;
+    tex.allocate(video.width, video.height, innerFormat);
+    tex.loadData(video.getPixels(), video.width * width, video.height * height, packFormat);
+    tex.draw( (ofGetWidth() - video.width) / 2, (ofGetHeight() - video.height) / 2, video.width, video.height);
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)
 {
     if (key == 'f') {
-		ofToggleFullscreen();
+        isFullscreen = !isFullscreen;
+        ofSetFullscreen(isFullscreen);
 	}
     if(key == ' ') {
         togglePlay();
@@ -152,7 +173,7 @@ void ofApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-
+    
 }
 
 //--------------------------------------------------------------
@@ -163,7 +184,7 @@ void ofApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){
     string file = dragInfo.files[0];
-    media->load(file);
+    media.loadMovie(file);
     
     cout << file << endl;
 }
