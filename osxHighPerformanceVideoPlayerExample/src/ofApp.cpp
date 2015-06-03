@@ -87,10 +87,11 @@ void ofApp::draw(){
             for(int i = 0; i < currentFrame.width; i += tileWidth ){
                 for(int j = 0; j < currentFrame.height; j += tileHeight ){
                     
-                //    ofSetColor(ofRandom(255),ofRandom(255),ofRandom(255)); //set random tints by changing this!
+                 //   ofSetColor(ofRandom(255),ofRandom(255),ofRandom(255)); //set random tints by changing this!
                     
-                    tiles.push_back(tile);
+               //     tiles.push_back(tile);
                     tiles.back().cropFrom(currentFrame, i + ofRandom(0,slideX), j + ofRandom(0,slideX), tileWidth, tileHeight);
+               
                     tiles.back().draw(i + ofRandom(0,slideX), j + ofRandom(0,slideX));
                     
                 }
