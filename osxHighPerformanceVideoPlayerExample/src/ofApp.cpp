@@ -26,7 +26,7 @@ void ofApp::setup(){
     // available when using the cross-platform ofVideoPlayer.
     
     // Texture only is fastest, but no pixel access allowed.
-  //   ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_TEXTURE_ONLY;
+    //   ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_TEXTURE_ONLY;
     
     // Pixels and texture together is faster than PIXEL_ONLY and manually uploaded textures.
     ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_PIXELS_AND_TEXTURE;
@@ -54,6 +54,8 @@ void ofApp::setup(){
     numTiles = numTilesX*numTilesY;
     tileWidth = newsFromSomewhere.getWidth() / numTilesX;
     tileHeight = newsFromSomewhere.getHeight() / numTilesY;
+    
+    slideX = 0;
 }
 
 //--------------------------------------------------------------
@@ -74,37 +76,44 @@ void ofApp::draw(){
         currentFrame.draw(0, 0);
         
         if(newsFromSomewhere.getDecodeMode() != OF_QTKIT_DECODE_TEXTURE_ONLY){ //pixel access will not work in this mode
-          //  ofSetHexColor(0x000000);
+            //  ofSetHexColor(0x000000);
             unsigned char * pixels = newsFromSomewhere.getPixels();
             ofPixelsRef pixelsRef = newsFromSomewhere.getPixelsRef();
-           // ofSetColor(ofColor::white);
+            // ofSetColor(ofColor::white);
             ofPushMatrix();
             ofTranslate(currentFrame.width, 0);
+            // Drawing current frame to avoid single colour background interferring with mosaic // would prefer the app not to clear screen at every cycle
+            currentFrame.draw(0, 0);
             for(int i = 0; i < currentFrame.width; i += tileWidth ){
                 for(int j = 0; j < currentFrame.height; j += tileHeight ){
-
-                    ofSetColor(ofRandom(255),ofRandom(255),ofRandom(255)); //set random tints by changing this!
-//                    currentFrame.drawSubsection(i, j, tileWidth, tileHeight, i, j);
-//                    
-//                    //  the following method is VERY slow, ~8fps:
-                      tile.cropFrom(currentFrame, i, j, currentFrame.width / numTilesX, currentFrame.height / numTilesY);
-                      tile.draw(i,j);
+                    
+                //    ofSetColor(ofRandom(255),ofRandom(255),ofRandom(255)); //set random tints by changing this!
+                    
+                    tiles.push_back(tile);
+                    tiles.back().cropFrom(currentFrame, i + ofRandom(0,slideX), j + ofRandom(0,slideX), tileWidth, tileHeight);
+                    tiles.back().draw(i + ofRandom(0,slideX), j + ofRandom(0,slideX));
+                    
                 }
             }
+            
+            if (tiles.size() > numTiles) {
+                tiles.resize(numTiles);
+            }
+            
             ofPopMatrix();
         }
     }
     
-//    ofSetColor(ofColor::white);
-//    currentFrame.drawSubsection(ofGetWidth()/2, ofGetHeight()/2, 100, 100, 0, 0, 400, 400);
+    //    ofSetColor(ofColor::white);
+    //    currentFrame.drawSubsection(ofGetWidth()/2, ofGetHeight()/2, 100, 100, 0, 0, 400, 400);
     ofSetColor(ofColor::black);
     
     ofDrawBitmapString( ofToString( ofGetFrameRate() ) + "fps", 20, ofGetHeight()-10);
     ofDrawBitmapString( ofToString( numTilesX ) + " x " + ofToString( numTilesY ) + " tiles", 170, ofGetHeight()-10);
     ofDrawBitmapString("duration: " + ofToString(newsFromSomewhere.getPosition() * newsFromSomewhere.getDuration(), 2) + "/" + ofToString(newsFromSomewhere.getDuration(), 2), 320, ofGetHeight()-10);
+    ofDrawBitmapString("slide = " + ofToString( slideX ), 620, ofGetHeight()-10);
     if(newsFromSomewhere.getIsMovieDone()){
     }
-    
 }
 
 //--------------------------------------------------------------
@@ -116,7 +125,7 @@ void ofApp::keyPressed(int key){
             break;
             
         case OF_KEY_LEFT:
-            numTilesX--;
+            if(numTilesX > 1) numTilesX--;
             break;
             
         case OF_KEY_RIGHT:
@@ -128,7 +137,7 @@ void ofApp::keyPressed(int key){
             break;
             
         case OF_KEY_DOWN:
-            numTilesY--;
+            if(numTilesY > 1) numTilesY--;
             break;
             
         case '0':
@@ -137,6 +146,14 @@ void ofApp::keyPressed(int key){
             
         case '1':
             tempFrame.setFromPixels( newsFromSomewhere.getPixelsRef() );
+            break;
+            
+        case '.':
+            slideX++;
+            break;
+            
+        case ',':
+            slideX--;
             break;
             
     }
@@ -187,5 +204,9 @@ void ofApp::gotMessage(ofMessage msg){
 
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){
+    //    string file = dragInfo.files[0];
+    //    media.loadMovie(file);
+    //    newsFromSomewhere.loadMovie(file, decodeMode);
     
+    //    cout << file << endl;
 }
