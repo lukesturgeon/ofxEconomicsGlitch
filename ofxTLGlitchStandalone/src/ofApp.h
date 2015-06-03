@@ -10,6 +10,7 @@ public:
     void setup();
     void update();
     void draw();
+    void exit();
     
     void keyPressed(int key);
     void keyReleased(int key);
@@ -27,6 +28,7 @@ public:
     ofVideoPlayer           media;
     bool                    isPlaying;
     bool                    isFullscreen;
+    bool                    noGlitch;
     
     ofParameterGroup        mediaSettingsA;
     ofParameter<int>        innerA;
@@ -48,4 +50,6 @@ public:
 	void pause();
 	void play();
     void drawGlitchedVideo(ofVideoPlayer & video, float width, float height, float innerFormat, float packFormat);
+    void onEconomicFall(float & newValue);
+    void onEconomicRise(float & newValue);
 };

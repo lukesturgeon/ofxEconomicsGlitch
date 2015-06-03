@@ -427,11 +427,17 @@ void slitScanApp::draw(){
 		frameCapacityText.draw(capacitySliderWidth/2 - frameCapacityText.width/2, CAPACITY_SLIDER_HEIGHT/2.0 - frameCapacityText.height/2);
 		ofDisableAlphaBlending();
 		
-	} ofPopMatrix(); ofPopStyle();
+	}
 
 	//draw bottom label
 	ofTranslate(0, CAPACITY_SLIDER_HEIGHT + 22);
-	bottomImage.draw(0,0);	
+	bottomImage.draw(0,0);
+    
+    ofPopMatrix(); ofPopStyle();
+    
+    
+    ofSetColor(255);
+    ofDrawBitmapString(ofToString(ofGetFrameRate()), 10, ofGetHeight()-10);
 }
 
 void slitScanApp::changeCapacity()

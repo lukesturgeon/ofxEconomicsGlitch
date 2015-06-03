@@ -41,6 +41,7 @@ int formats[] = {
     GL_LUMINANCE_ALPHA
 };
 
+//--------------------------------------------------------------
 void ofApp::togglePlay() {
 	if (isPlaying) {
 		pause();
@@ -49,15 +50,41 @@ void ofApp::togglePlay() {
 	}
 }
 
+//--------------------------------------------------------------
 void ofApp::pause() {
     isPlaying = false;
     media.setPaused(!isPlaying);
 }
 
+//--------------------------------------------------------------
 void ofApp::play() {
     isPlaying = true;
 	media.setPaused(!isPlaying);
 }
+
+//--------------------------------------------------------------
+void ofApp::drawGlitchedVideo(ofVideoPlayer & video, float width, float height, float innerFormat, float packFormat)
+{
+    ofTexture tex;
+    tex.allocate(video.width, video.height, innerFormat);
+    tex.loadData(video.getPixels(), video.width * width, video.height * height, packFormat);
+    tex.draw( (ofGetWidth() - video.width) / 2, (ofGetHeight() - video.height) / 2, video.width, video.height);
+}
+
+//--------------------------------------------------------------
+void ofApp::onEconomicRise(float &newValue)
+{
+    cout << "GOING UP " << newValue << endl;
+}
+
+//--------------------------------------------------------------
+void ofApp::onEconomicFall(float &newValue)
+{
+    cout << "GOING DOWN " << newValue << endl;
+}
+
+
+
 
 
 
@@ -68,8 +95,11 @@ void ofApp::setup()
     ofSetVerticalSync(true);
 	ofBackground(.15 * 255);
     isFullscreen = false;
+    noGlitch = false;
     
     // setup the economics numbers
+    ofAddListener(economics.onEconomicRise, this, &ofApp::onEconomicRise);
+    ofAddListener(economics.onEconomicFall, this, &ofApp::onEconomicFall);
     
     // Setup the GUI
     int n1 = sizeof(internalFormats) / sizeof(int);
@@ -94,8 +124,16 @@ void ofApp::setup()
     gui.add(mediaSettingsB);
     
     // Load the video file
-   	media.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/DestructiveDestructionFourthEdit.mp4");
+    media.setLoopState( OF_LOOP_NORMAL );
+   	media.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/BigFreezeSecondEditSansSon.mp4");
 	play();
+}
+
+//--------------------------------------------------------------
+void ofApp::exit()
+{
+    ofRemoveListener(economics.onEconomicRise, this, &ofApp::onEconomicRise);
+    ofRemoveListener(economics.onEconomicFall, this, &ofApp::onEconomicFall);
 }
 
 //--------------------------------------------------------------
@@ -108,13 +146,21 @@ void ofApp::update()
 //--------------------------------------------------------------
 void ofApp::draw()
 {
-    // draw the original video B
-    ofSetColor( tintB );
-    drawGlitchedVideo(media, widthPrcB, heightPrcB, internalFormats[ innerB ], formats[ packB ]);
-    
-    // draw the glitched video A
-    ofSetColor( tintA );
-    drawGlitchedVideo(media, widthPrcA, heightPrcA, internalFormats[ innerA ], formats[ packA ]);
+    if (noGlitch){
+        // just draw the original
+        //media.draw( (ofGetWidth() - media.width) / 2, (ofGetHeight() - media.height) / 2, media.width, media.height);
+        ofSetColor(255);
+        drawGlitchedVideo(media, 1.0, 1.0, GL_RGB, GL_RGB);
+    }
+    else {
+        // draw the glitched video B
+        ofSetColor( tintB );
+        drawGlitchedVideo(media, widthPrcB, heightPrcB, internalFormats[ innerB ], formats[ packB ]);
+        
+        // draw the glitched video A
+        ofSetColor( tintA );
+        drawGlitchedVideo(media, widthPrcA, heightPrcA, internalFormats[ innerA ], formats[ packA ]);
+    }
     
     if( !isFullscreen ) {
         ofSetColor(255);
@@ -126,21 +172,15 @@ void ofApp::draw()
 }
 
 //--------------------------------------------------------------
-void ofApp::drawGlitchedVideo(ofVideoPlayer & video, float width, float height, float innerFormat, float packFormat)
-{
-    ofTexture tex;
-    tex.allocate(video.width, video.height, innerFormat);
-    tex.loadData(video.getPixels(), video.width * width, video.height * height, packFormat);
-    tex.draw( (ofGetWidth() - video.width) / 2, (ofGetHeight() - video.height) / 2, video.width, video.height);
-}
-
-//--------------------------------------------------------------
 void ofApp::keyPressed(int key)
 {
     if (key == 'f') {
         isFullscreen = !isFullscreen;
         ofSetFullscreen(isFullscreen);
 	}
+    if (key == 'o') {
+        noGlitch = !noGlitch;
+    }
     if(key == ' ') {
         togglePlay();
     }
