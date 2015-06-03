@@ -91,7 +91,7 @@ void ofApp::onEconomicFall(float &newValue)
 //--------------------------------------------------------------
 void ofApp::setup()
 {
-    ofSetWindowTitle("Destructive Destruction");
+    ofSetWindowTitle("DestructiveDestruction");
     ofSetVerticalSync(true);
 	ofBackground(.15 * 255);
     isFullscreen = false;
