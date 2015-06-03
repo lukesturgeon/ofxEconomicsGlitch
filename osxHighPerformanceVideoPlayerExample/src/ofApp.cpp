@@ -9,9 +9,9 @@
 //--------------------------------------------------------------
 
 void ofApp::setup(){
-    ofBackground(255, 255, 255);
+    ofBackground(0, 0, 0);
     
-    frameByframe = false;
+    
     
     // #1 Play videos with an alpha channel. ---------------------------
     // ofQTKitPlayer videos encoded with Alpha channels (e.g. Animation Codec etc).
@@ -49,13 +49,21 @@ void ofApp::setup(){
     
     newsFromSomewhere.play();
     
+    isPaused = false;
+    
+    isFullScreen = false;
+    
     numTilesX = 16;
     numTilesY = 9;
     numTiles = numTilesX*numTilesY;
-    tileWidth = newsFromSomewhere.getWidth() / numTilesX;
-    tileHeight = newsFromSomewhere.getHeight() / numTilesY;
+    tileGrabWidth = newsFromSomewhere.getWidth() / numTilesX;
+    tileGrabHeight = newsFromSomewhere.getHeight() / numTilesY;
     
     slideX = 0;
+    
+    gui.setup("controls");
+    gui.add( numTilesWidth.setup("numTilesWidth", 1, 1, 100) );
+    
 }
 
 //--------------------------------------------------------------
@@ -65,35 +73,40 @@ void ofApp::update(){
     if(newsFromSomewhere.isFrameNew()) {
         currentFrame.setFromPixels( newsFromSomewhere.getPixelsRef() );
     }
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     
+    
+    
     ofSetHexColor(0xFFFFFF);
+//    ofSetHexColor(0x000000);
     
     if (newsFromSomewhere.isLoaded()) {
-        currentFrame.draw(0, 0);
+        if (!isFullScreen) currentFrame.draw(0, 0);
         
         if(newsFromSomewhere.getDecodeMode() != OF_QTKIT_DECODE_TEXTURE_ONLY){ //pixel access will not work in this mode
-            //  ofSetHexColor(0x000000);
+            // ofSetHexColor(0x000000);
             unsigned char * pixels = newsFromSomewhere.getPixels();
             ofPixelsRef pixelsRef = newsFromSomewhere.getPixelsRef();
             // ofSetColor(ofColor::white);
-            ofPushMatrix();
-            ofTranslate(currentFrame.width, 0);
-            // Drawing current frame to avoid single colour background interferring with mosaic // would prefer the app not to clear screen at every cycle
-            currentFrame.draw(0, 0);
-            for(int i = 0; i < currentFrame.width; i += tileWidth ){
-                for(int j = 0; j < currentFrame.height; j += tileHeight ){
+            if (!isFullScreen) ofPushMatrix();
+            if (!isFullScreen) ofTranslate(currentFrame.width, 0);
+            
+            for(int i = 0; i < displayWidth; i += tileDispWidth ){
+                for(int j = 0; j < displayHeight; j += tileDispHeight ){
                     
-                 //   ofSetColor(ofRandom(255),ofRandom(255),ofRandom(255)); //set random tints by changing this!
+                    ofSetColor(ofRandom(255),ofRandom(255),ofRandom(255)); //set random tints by changing this!
                     
-               //     tiles.push_back(tile);
-                    tiles.back().cropFrom(currentFrame, i + ofRandom(0,slideX), j + ofRandom(0,slideX), tileWidth, tileHeight);
-               
-                    tiles.back().draw(i + ofRandom(0,slideX), j + ofRandom(0,slideX));
+                    tiles.push_back(tile);
                     
+                    tiles.back().cropFrom(currentFrame, i, j, tileGrabWidth, tileGrabHeight);
+                    
+                    if (isFullScreen) tiles.back().draw(i + ofRandom(0,slideX), j + ofRandom(0,slideX), tileDispWidth, tileDispWidth);
+                    
+                    if (!isFullScreen) tiles.back().draw(i + ofRandom(0,slideX), j + ofRandom(0,slideX), tileDispWidth, tileDispWidth);
                 }
             }
             
@@ -101,28 +114,37 @@ void ofApp::draw(){
                 tiles.resize(numTiles);
             }
             
-            ofPopMatrix();
+            if (!isFullScreen) ofPopMatrix();
         }
     }
     
     //    ofSetColor(ofColor::white);
-    //    currentFrame.drawSubsection(ofGetWidth()/2, ofGetHeight()/2, 100, 100, 0, 0, 400, 400);
+    if (!isFullScreen) {
     ofSetColor(ofColor::black);
     
     ofDrawBitmapString( ofToString( ofGetFrameRate() ) + "fps", 20, ofGetHeight()-10);
     ofDrawBitmapString( ofToString( numTilesX ) + " x " + ofToString( numTilesY ) + " tiles", 170, ofGetHeight()-10);
     ofDrawBitmapString("duration: " + ofToString(newsFromSomewhere.getPosition() * newsFromSomewhere.getDuration(), 2) + "/" + ofToString(newsFromSomewhere.getDuration(), 2), 320, ofGetHeight()-10);
     ofDrawBitmapString("slide = " + ofToString( slideX ), 620, ofGetHeight()-10);
+    
+    ofDrawBitmapString("getWindowMode() " + ofToString( ofGetWindowMode() ), 770, ofGetHeight()-10);
+    
+        gui.draw();
+
+    }
+    
     if(newsFromSomewhere.getIsMovieDone()){
     }
+    
+    
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     switch(key){
         case 'f':
-            frameByframe = !frameByframe;
-            newsFromSomewhere.setPaused(frameByframe);
+            ofToggleFullscreen();
             break;
             
         case OF_KEY_LEFT:
@@ -157,10 +179,48 @@ void ofApp::keyPressed(int key){
             slideX--;
             break;
             
+        case '>':
+            slideX+=10;
+            break;
+            
+        case '<':
+            slideX-=10;
+            break;
+            
+            
+        case ' ':
+            if(isPaused){
+                newsFromSomewhere.setPaused(false);
+                isPaused = false;
+            } else {
+                newsFromSomewhere.setPaused(true);
+                isPaused = true;
+            }
+            break;
+            
     }
     numTiles = numTilesX*numTilesY;
-    tileWidth = newsFromSomewhere.getWidth() / numTilesX;
-    tileHeight = newsFromSomewhere.getHeight() / numTilesY;
+    tileGrabWidth = newsFromSomewhere.getWidth() / numTilesX;
+    tileGrabHeight = newsFromSomewhere.getHeight() / numTilesY;
+    
+    switch  ( ofGetWindowMode() ) {
+        case 0:
+            displayWidth = currentFrame.width;
+            displayHeight = currentFrame.height;
+            tileDispWidth = tileGrabWidth;
+            tileDispHeight = tileGrabHeight;
+            isFullScreen = false;
+            break;
+            
+        case 1:
+            displayWidth = ofGetWidth();
+            displayHeight = ofGetHeight();
+            tileDispWidth = displayWidth/numTilesX;
+            tileDispHeight = displayHeight/numTilesY;
+            isFullScreen = true;
+            break;
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -180,17 +240,12 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    if(!frameByframe){
-        newsFromSomewhere.setPaused(true);
-    }
+    
 }
 
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-    if(!frameByframe){
-        newsFromSomewhere.setPaused(false);
-    }
 }
 
 //--------------------------------------------------------------

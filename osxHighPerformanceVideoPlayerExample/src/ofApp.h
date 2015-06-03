@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "ofQTKitPlayer.h"
 #include "ofImage.h"
-#include "/Users/peterhudson/Documents/of_v0.8.4_osx_release/addons/ofxGui/src/ofxGui.h"
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp {
     
@@ -26,25 +26,29 @@ public:
 //    ofxFloatSlider radius;
 //    ofxColorSlider color;
 //    ofxVec2Slider center;
-//    ofxIntSlider circleResolution;
 //    ofxToggle filled;
 //    ofxButton twoCircles;
 //    ofxButton ringButton;
 //    ofxLabel screenSize;
-//    
-//    ofxPanel gui;
+    
+    ofxPanel gui;
+    ofxIntSlider numTilesWidth;
     
     //instead of using ofVideoPlayer we use the ofQTKitPlayer directly
     ofQTKitPlayer newsFromSomewhere;
     
-    bool frameByframe;
+    bool isPaused;
+    
+    bool isFullScreen;
     
     ofImage currentFrame, tempFrame, tile;
     
     deque<ofImage> tiles;
     
-    int numTilesX, numTilesY, numTiles, tileWidth, tileHeight;
+    int numTilesX, numTilesY, numTiles, tileGrabWidth, tileGrabHeight, tileDispWidth, tileDispHeight;
     
     int slideX, slideY, grabX, grabY;
+    
+    int displayWidth, displayHeight;
 };
 
