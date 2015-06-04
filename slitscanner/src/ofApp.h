@@ -1,3 +1,9 @@
+/**
+ * slitscanner example from http://formandcode.com/code-examples/transform-slit-scan
+ */
+
+
+
 #pragma once
 
 #include "ofMain.h"
