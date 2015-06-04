@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>CB0CA0D6-F573-40FD-BA83-8F7D1C02F704</string>
+	<key>IDESourceControlProjectName</key>
+	<string>DestructiveDestruction</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>265133EC-0F91-4C08-A0A7-4BF008E0E385</key>
+		<string>https://github.com/lukesturgeon/ofx_economicsGlitcher.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>DestructiveDestruction/DestructiveDestruction.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>265133EC-0F91-4C08-A0A7-4BF008E0E385</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/lukesturgeon/ofx_economicsGlitcher.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>265133EC-0F91-4C08-A0A7-4BF008E0E385</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>265133EC-0F91-4C08-A0A7-4BF008E0E385</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ofx_economicsGlitcher</string>
+		</dict>
+	</array>
+</dict>
+</plist>
