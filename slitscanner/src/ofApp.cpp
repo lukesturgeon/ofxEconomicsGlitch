@@ -23,30 +23,11 @@ void ofApp::togglePlay(){
     }
 }
 
-//--------------------------------------------------------------
-void ofApp::getPixel(int horizontal, int vertical, unsigned char *R, unsigned char *G, unsigned char *B, int w, unsigned char *pixels)
-{
-    int thisPixel;
-    thisPixel = 3 * (w * vertical + horizontal);
-    *R = pixels[thisPixel];
-    *G = pixels[thisPixel+1];
-    *B = pixels[thisPixel+2];
-}
-
-//--------------------------------------------------------------
-void ofApp::setPixel(int horizontal, int vertical, unsigned char R, unsigned char G, unsigned char B, int w, unsigned char *pixels)
-{
-    int thisPixel;
-    thisPixel = 3 * (w * vertical + horizontal);
-    pixels[thisPixel] = R;
-    pixels[thisPixel+1] = G;
-    pixels[thisPixel+2] = B;
-}
-
 
 int video_width = 800;
 int video_height = 450;
-int draw_position_x = 0;
+
+deque<int> draw_positions (400);
 
 
 
@@ -62,7 +43,9 @@ void ofApp::setup()
     play();
     
     texture.allocate(video_width, video_height, GL_RGB);
-    texpixels = new unsigned char [video_width * video_height * 3];
+    
+    gui.setup();
+    gui.add( yOffsetAmount.set("y offset", 400, 0, 1000) );
 }
 
 //--------------------------------------------------------------
@@ -72,19 +55,10 @@ void ofApp::update()
     
     if (video.isFrameNew())
     {
-        vidpixels = video.getPixels();
-        for (int y = 0; y < video_height; y++) {
-            unsigned char r, g, b;
-            getPixel(draw_position_x, y, &r, &g, &b, video_width, vidpixels);
-            setPixel(draw_position_x, y, r, g, b, video_width, texpixels);
-        }
-        texture.loadData(texpixels, video_width, video_height, GL_RGB);
-        draw_position_x++;
-        
-        if(draw_position_x > video_width){
-            draw_position_x = 0;
-        }
+        texture.loadData( video.getPixelsRef() );
     }
+    
+    economics.update();
 }
 
 //--------------------------------------------------------------
@@ -98,10 +72,24 @@ void ofApp::draw()
     else
     {
         // draw a glitch
-        texture.draw((ofGetWidth() - video.width) / 2, (ofGetHeight() - video.height) / 2, video.width, video.height);
+        //texture.draw((ofGetWidth() - video.width) / 2, (ofGetHeight() - video.height) / 2, video.width, video.height);
+        
+        ofSetColor(255);
+        
+        float yOffset = 0;
+        
+        for (int x = 0; x < video_width; x++) {
+            // draw a section
+            yOffset = ofMap(economics.getValueAt((float)x/video_width), -1.0f, 1.0f, 0.0f, 1.0f);
+            texture.drawSubsection(x, yOffsetAmount * yOffset, 1, video_height, x, 0);
+            yOffset++;
+        }
+        
+        economics.draw(10,ofGetHeight()-130);
         
         // debugger
         ofDrawBitmapString(ofToString(ofGetFrameRate()), 10, ofGetHeight()-10);
+        gui.draw();
     }
 }
 

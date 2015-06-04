@@ -1,12 +1,8 @@
-/**
- * slitscanner example from http://formandcode.com/code-examples/transform-slit-scan
- */
-
-
-
 #pragma once
 
 #include "ofMain.h"
+#include "ofxEconomics.h"
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
     
@@ -25,9 +21,12 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
+    ofParameter<float>  yOffsetAmount;
+    ofxPanel            gui;
+    
     ofVideoPlayer       video;
     ofTexture           texture;
-    unsigned char        * texpixels, * vidpixels;
+    ofxEconomics        economics;
     bool                isPlaying;
     bool                isFullscreen;
     bool                noGlitch;
@@ -35,9 +34,5 @@ public:
     void play();
     void pause();
     void togglePlay();
-    void setPixel(int horizontal,int vertical,unsigned char R,
-                  unsigned char G,unsigned char B,int w, unsigned char pixels[]);
-    void getPixel(int horizontal,int vertical,unsigned char* R,
-                  unsigned char* G,unsigned char* B,int w, unsigned char pixels[]);
     
 };

@@ -5,12 +5,17 @@ ofxEconomics::ofxEconomics()
     economicState = -1;
     
     // fild the array with random perlin noise
-    for(int i = 0; i < 100; i++)
+    for(int i = 0; i < 800; i++)
     {
         data.push_back( ofSignedNoise( 0.1*i ) );
     }
     
-    randomCounter = 100;
+    randomCounter = data.size();
+}
+
+float ofxEconomics::getValueAt(float prc)
+{
+    return data[ floor(prc*data.size()) ];
 }
 
 void ofxEconomics::update()
@@ -45,14 +50,15 @@ void ofxEconomics::update()
 void ofxEconomics::draw(int x, int y)
 {
     ofPushMatrix();
+    ofPushStyle();
     ofTranslate(x, y);
     
     ofSetColor(60);
-    ofRect(0, 0, 100, 100);
+    ofRect(0, 0, data.size(), 100);
     
     // draw the data
     ofSetColor(255);
-    for(int i = 1; i < 100; i++)
+    for(int i = 1; i < data.size(); i++)
     {
         ofLine(i-1, ofMap(data[i-1], -1, 1, 100, 0),
                i, ofMap(data[i], -1, 1, 100, 0) );
@@ -65,5 +71,6 @@ void ofxEconomics::draw(int x, int y)
     }
     ofRect(5, 5, 10, 10);
     
+    ofPopStyle();
     ofPopMatrix();
 }
