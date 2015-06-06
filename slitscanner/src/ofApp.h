@@ -22,7 +22,15 @@ public:
     void gotMessage(ofMessage msg);
     
     ofParameter<float>  yOffsetAmount;
+    ofParameter<float>  yOffsetSpeed;
+    ofParameter<float>  yElasticity;
+    
+    ofParameter<ofColor>    col1;
+    ofParameter<ofColor>    col2;
+    ofParameter<ofColor>    col3;
+    
     ofxPanel            gui;
+    
     
     ofVideoPlayer       video;
     ofTexture           texture;
@@ -30,9 +38,13 @@ public:
     bool                isPlaying;
     bool                isFullscreen;
     bool                noGlitch;
+    deque<float>        timeline;
+    float               glitchOffset;
     
     void play();
     void pause();
     void togglePlay();
+    void onEconomicFall(float & difference);
+    void onEconomicRise(float & difference);
     
 };

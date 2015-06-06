@@ -13,7 +13,7 @@ public:
     void update();
     void draw(int x, int y);
     
-    float getValueAt(float prc);
+    float getDataAtPercentage(float p);
     
     ofEvent<float> onEconomicRise;
     ofEvent<float> onEconomicFall;
@@ -21,5 +21,7 @@ public:
     deque<float> data;
     int randomCounter;
     int economicState;
+    
+    ofParameter<float> updateThreshold;
     
 };

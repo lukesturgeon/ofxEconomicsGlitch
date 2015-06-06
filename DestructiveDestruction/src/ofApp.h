@@ -50,6 +50,6 @@ public:
 	void pause();
 	void play();
     void drawGlitchedVideo(ofVideoPlayer & video, float width, float height, float innerFormat, float packFormat);
-    void onEconomicFall(float & newValue);
-    void onEconomicRise(float & newValue);
+    void onEconomicFall(float & difference);
+    void onEconomicRise(float & difference);
 };
