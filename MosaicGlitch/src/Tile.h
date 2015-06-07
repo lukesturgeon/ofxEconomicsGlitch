@@ -21,6 +21,7 @@ public:
     void draw();
     void setPos(int i, int num, int numX, int numY, int srcW, int srcH, int dstW, int dstH);
     float sX, sY, sW, sH, dX, dY, dW, dH;
+    ofImage img;
     
     
 private:

@@ -30,6 +30,7 @@ void Tile::setPos(int i, int num, int numX, int numY, int srcW, int srcH, int ds
 
 void Tile::update() {
     
+    
 }
 
 void Tile::draw() {

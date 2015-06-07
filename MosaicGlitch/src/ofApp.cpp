@@ -12,6 +12,11 @@ void ofApp::setup(){
     numTilesX = 16;
     numTilesY = 9;
     initTiles();
+    gui.setup("controls");
+    gui.add( colours.setup("colours", 255, 255, 0) );
+    gui.add( scale.setup("scale", 1, 1, 10) );
+    gui.add( pos.setup("pos", 1, 0, 100) );
+    
 }
 
 //--------------------------------------------------------------
@@ -19,30 +24,36 @@ void ofApp::update(){
     newsFromSomewhere.update();
     if(newsFromSomewhere.isFrameNew()) {
         currentFrame.setFromPixels( newsFromSomewhere.getPixelsRef() );
+        for (int i = 0; i < numTiles; i++) {
+            tileArray[i].img.cropFrom(currentFrame, tileArray[i].sX, tileArray[i].sY, tileArray[i].sW, tileArray[i].sH);
+        }
     }
-
-    //display framerate as window title
-    std::stringstream strm;
-    strm << "fps: " << ofGetFrameRate();
-    ofSetWindowTitle(strm.str());
-    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofSetColor(255);
+    
+    
     for (int i = 0; i < numTiles; i++) {
-    //    ofSetColor(ofRandom(0,255),ofRandom(0,255),ofRandom(0,255));
-        currentTile.cropFrom(currentFrame, tileArray[i].sX, tileArray[i].sY, tileArray[i].sW, tileArray[i].sH);
-        currentTile.draw(tileArray[i].dX, tileArray[i].dY, tileArray[i].dW, tileArray[i].dH);
+            ofSetColor(ofRandom(colours,255),ofRandom(colours,255),ofRandom(colours,255));
+        tileArray[i].img.draw(tileArray[i].dX+ofRandom(pos), tileArray[i].dY+ofRandom(pos), tileArray[i].dW*scale, tileArray[i].dH*scale);
     }
     ofSetColor(0);
     
     for (int i = 0; i < numTiles; i++) {
         ofDrawBitmapString( "i = " + ofToString(i) + "\t" + ofToString(tileArray[i].dX) + " dX\t" + ofToString(tileArray[i].dY)+ " dY\t" +ofToString(tileArray[i].dW)+ " dW\t" +ofToString(tileArray[i].dH)+ " dH\t", 20, 20 + (i*12));
     }
-  
+    
     //    ofDrawBitmapString( ofToString( ofGetFrameRate() ) + "fps", 20, displayHeight-10);
+    
+    
+    //display framerate as window title
+    std::stringstream strm;
+    strm << "fps: " << ofGetFrameRate();
+    ofSetWindowTitle(strm.str());
+    
+    gui.draw();
 }
 
 //--------------------------------------------------------------

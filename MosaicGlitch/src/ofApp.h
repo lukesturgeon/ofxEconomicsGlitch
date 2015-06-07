@@ -39,6 +39,12 @@ public:
     
     //------------------------------------------------------
     
+    ofxPanel gui;
+    ofxIntSlider colours, pos;
+    ofxFloatSlider scale;
+    
+    //------------------------------------------------------
+    
     int numTiles, numTilesX, numTilesY;
     int sourceWidth, sourceHeight, displayWidth, displayHeight;
     
