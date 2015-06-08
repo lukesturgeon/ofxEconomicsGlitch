@@ -7,6 +7,8 @@
 //
 
 #pragma once
+#ifndef Tile_h
+#define Tile_h
 
 #include "ofMain.h"
 
@@ -17,7 +19,14 @@ public:
     Tile();
     void update();
     void draw();
-    int x,y,w,h;
-   
+    void setPos(int i, int num, int numX, int numY, int srcW, int srcH, int dstW, int dstH);
+    int sX, sY, sW, sH, dX, dY, dW, dH;
+    
+    
+private:
+    
     
 };
+
+
+#endif

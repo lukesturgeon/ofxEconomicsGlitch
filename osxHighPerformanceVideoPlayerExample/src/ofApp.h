@@ -4,6 +4,8 @@
 #include "ofQTKitPlayer.h"
 #include "ofImage.h"
 #include "ofxGui.h"
+#include "Tile.h"
+#include <math.h>
 
 class ofApp : public ofBaseApp {
     
@@ -23,6 +25,8 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
+    void initTiles(int numX, int numY, int srcW, int srcH, int dstW, int dstH);
+    
 //    ofxFloatSlider radius;
 //    ofxColorSlider color;
 //    ofxVec2Slider center;
@@ -40,8 +44,12 @@ public:
     bool isPaused;
     
     bool isFullScreen;
+
+    ofImage currentFrame, tempFrame;
     
-    ofImage currentFrame, tempFrame, tile;
+    Tile theTile;
+
+    std::vector<Tile> tileArray;
     
     deque<ofImage> tiles;
     

@@ -1,5 +1,6 @@
 #include "ofApp.h"
 
+
 // High Performance OS X Video Playback Example
 //--------------------------------------------------------------
 // This example shows how to use the OS X platform specific
@@ -10,8 +11,6 @@
 
 void ofApp::setup(){
     ofBackground(0, 0, 0);
-    
-    
     
     // #1 Play videos with an alpha channel. ---------------------------
     // ofQTKitPlayer videos encoded with Alpha channels (e.g. Animation Codec etc).
@@ -74,6 +73,8 @@ void ofApp::update(){
         currentFrame.setFromPixels( newsFromSomewhere.getPixelsRef() );
     }
     
+    theTile.update();
+    
 }
 
 //--------------------------------------------------------------
@@ -82,7 +83,7 @@ void ofApp::draw(){
     
     
     ofSetHexColor(0xFFFFFF);
-//    ofSetHexColor(0x000000);
+    //    ofSetHexColor(0x000000);
     
     if (newsFromSomewhere.isLoaded()) {
         if (!isFullScreen) currentFrame.draw(0, 0);
@@ -100,7 +101,7 @@ void ofApp::draw(){
                     
                     ofSetColor(ofRandom(255),ofRandom(255),ofRandom(255)); //set random tints by changing this!
                     
-                    tiles.push_back(tile);
+                    tiles.push_back(currentFrame);
                     
                     tiles.back().cropFrom(currentFrame, i, j, tileGrabWidth, tileGrabHeight);
                     
@@ -120,23 +121,38 @@ void ofApp::draw(){
     
     //    ofSetColor(ofColor::white);
     if (!isFullScreen) {
-    ofSetColor(ofColor::black);
-    
-    ofDrawBitmapString( ofToString( ofGetFrameRate() ) + "fps", 20, ofGetHeight()-10);
-    ofDrawBitmapString( ofToString( numTilesX ) + " x " + ofToString( numTilesY ) + " tiles", 170, ofGetHeight()-10);
-    ofDrawBitmapString("duration: " + ofToString(newsFromSomewhere.getPosition() * newsFromSomewhere.getDuration(), 2) + "/" + ofToString(newsFromSomewhere.getDuration(), 2), 320, ofGetHeight()-10);
-    ofDrawBitmapString("slide = " + ofToString( slideX ), 620, ofGetHeight()-10);
-    
-    ofDrawBitmapString("getWindowMode() " + ofToString( ofGetWindowMode() ), 770, ofGetHeight()-10);
-    
+        ofSetColor(ofColor::black);
+        
+        ofDrawBitmapString( ofToString( ofGetFrameRate() ) + "fps", 20, ofGetHeight()-10);
+        ofDrawBitmapString( ofToString( numTilesX ) + " x " + ofToString( numTilesY ) + " tiles", 170, ofGetHeight()-10);
+        ofDrawBitmapString("duration: " + ofToString(newsFromSomewhere.getPosition() * newsFromSomewhere.getDuration(), 2) + "/" + ofToString(newsFromSomewhere.getDuration(), 2), 320, ofGetHeight()-10);
+        ofDrawBitmapString("slide = " + ofToString( slideX ), 620, ofGetHeight()-10);
+        
+        ofDrawBitmapString("getWindowMode() " + ofToString( ofGetWindowMode() ), 770, ofGetHeight()-10);
+        
         gui.draw();
-
+        
     }
     
     if(newsFromSomewhere.getIsMovieDone()){
     }
     
+    theTile.draw();
+}
+
+//--------------------------------------------------------------
+void ofApp::initTiles(int numX, int numY, int srcW, int srcH, int dstW, int dstH) {
     
+    numTiles = numX*numY;
+    tileGrabWidth = newsFromSomewhere.getWidth() / numTilesX;
+    tileGrabHeight = newsFromSomewhere.getHeight() / numTilesY;
+    
+    tileArray.assign(numTiles, Tile());
+    
+    
+    for (int i =0; i < numTiles; i++) {
+        tileArray[i].setPos(i, numTiles, numX, numY, srcW, srcH, dstW, dstH);
+    }
     
 }
 
@@ -199,9 +215,9 @@ void ofApp::keyPressed(int key){
             break;
             
     }
-    numTiles = numTilesX*numTilesY;
-    tileGrabWidth = newsFromSomewhere.getWidth() / numTilesX;
-    tileGrabHeight = newsFromSomewhere.getHeight() / numTilesY;
+    
+//    initTiles(numTilesX, numTilesY, newsFromSomewhere.getWidth(), newsFromSomewhere.getHeight());
+    
     
     switch  ( ofGetWindowMode() ) {
         case 0:
