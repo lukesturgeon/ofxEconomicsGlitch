@@ -125,7 +125,7 @@ void ofApp::setup()
     
     // Load the video file
     media.setLoopState( OF_LOOP_NORMAL );
-   	media.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/BigFreezeSecondEditSansSon.mp4");
+   	media.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/DestructiveDestructionFourthEdit.mp4");
 	play();
 }
 
@@ -154,20 +154,26 @@ void ofApp::draw()
     }
     else {
         // draw the glitched video B
-        ofSetColor( tintB );
+        //ofSetColor( tintB );
+        ofSetColor(255);
         drawGlitchedVideo(media, widthPrcB, heightPrcB, internalFormats[ innerB ], formats[ packB ]);
         
+        ofEnableBlendMode(OF_BLENDMODE_SCREEN);
+        
         // draw the glitched video A
-        ofSetColor( tintA );
+        //ofSetColor( tintA );
+        ofSetColor(255);
         drawGlitchedVideo(media, widthPrcA, heightPrcA, internalFormats[ innerA ], formats[ packA ]);
+        
+        ofDisableBlendMode();
     }
     
     if( !isFullscreen ) {
         ofSetColor(255);
         ofDrawBitmapString(ofToString(ofGetFrameRate())+"fps", 20, ofGetHeight()-20);
         
+        economics.draw(10,ofGetHeight()-130);
         gui.draw();
-        economics.draw(20, 500);
     }
 }
 
