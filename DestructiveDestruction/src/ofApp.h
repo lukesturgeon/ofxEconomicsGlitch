@@ -22,34 +22,35 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
+    //-------------------------------------------
     
     ofxEconomics            economics;
-    
-    ofVideoPlayer           media;
+    ofVideoPlayer           video;
     bool                    isPlaying;
     bool                    isFullscreen;
-    bool                    noGlitch;
+    bool                    isGlitch;
     
-    ofParameterGroup        mediaSettingsA;
+    ofxPanel                gui;
     ofParameter<int>        innerA;
     ofParameter<int>        packA;
     ofParameter<float>      widthPrcA;
     ofParameter<float>      heightPrcA;
     ofParameter<ofColor>    tintA;
-    //
-    ofParameterGroup        mediaSettingsB;
+    
     ofParameter<int>        innerB;
     ofParameter<int>        packB;
     ofParameter<float>      widthPrcB;
     ofParameter<float>      heightPrcB;
     ofParameter<ofColor>    tintB;
-    //
-    ofxPanel                gui;
+    
+    float                   innerAnimatorA, packAnimatorB, heightBAnimator;
+    ofxFloatSlider          animationDecay;
+    
+    //-------------------------------------------
     
     void togglePlay();
 	void pause();
 	void play();
     void drawGlitchedVideo(ofVideoPlayer & video, float width, float height, float innerFormat, float packFormat);
     void onEconomicFall(float & difference);
-    void onEconomicRise(float & difference);
 };
