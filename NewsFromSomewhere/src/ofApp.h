@@ -17,6 +17,7 @@ public:
     void setup();
     void update();
     void draw();
+    void exit();
     
     //------------------------------------------------------
     
@@ -35,12 +36,17 @@ public:
     ofQTKitPlayer           video;
     ofImage                 currentFrame, currentTile;
     std::vector<Tile>       tileArray;
+    void                    play();
+    void                    pause();
+    void                    togglePlay();
     void                    initTiles();
+    void                    numTilesXChanged(int & newNumX);
+    void                    numTilesYChanged(int & newNumY);
     
     //------------------------------------------------------
     
     ofxPanel                gui;
-    ofxIntSlider            colours, pos;
+    ofxIntSlider            colours, pos, numTilesX, numTilesY;
     ofxFloatSlider          scale;
     
     int video_width = 800;
@@ -48,7 +54,7 @@ public:
     
     //------------------------------------------------------
     
-    int                     numTiles, numTilesX, numTilesY;
+    int                     numTiles;
     int                     sourceWidth, sourceHeight, displayWidth, displayHeight;
     bool                    isGlitch, isPlaying, isFullscreen;
     
