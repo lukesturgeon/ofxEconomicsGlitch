@@ -13,10 +13,10 @@ Tile::Tile() {
 
 void Tile::setPos(int i, int num, int numX, int numY, int srcW, int srcH, int dstW, int dstH) {
         
-    sW = srcW / numX;
-    sH = srcH / numY;
-    dW = dstW / numX;
-    dH = dstH / numY;
+    sW = float(srcW) / numX;
+    sH = float(srcH) / numY;
+    dW = float(dstW) / numX;
+    dH = float(dstH) / numY;
     
     float x = i % numX;
     sX = x * sW;
