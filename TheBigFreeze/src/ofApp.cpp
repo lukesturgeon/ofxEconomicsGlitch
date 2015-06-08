@@ -1,49 +1,5 @@
 #include "ofApp.h"
 
-//--------------------------------------------------------------
-void ofApp::play(){
-    isPlaying = true;
-    video.setPaused(false);
-}
-
-//--------------------------------------------------------------
-void ofApp::pause(){
-    isPlaying = false;
-    video.setPaused(true);
-}
-
-//--------------------------------------------------------------
-void ofApp::togglePlay(){
-    if (isPlaying){
-        isPlaying = false;
-        video.setPaused(true);
-    } else {
-        isPlaying = true;
-        video.setPaused(false);
-    }
-}
-
-//--------------------------------------------------------------
-void ofApp::onEconomicRise(float &difference){
-    // update the glitchOffset which keeps getting added to the timeline
-    glitchOffset = difference*10;
-    
-    cout << "up " << difference*10 << endl;
-}
-
-//--------------------------------------------------------------
-void ofApp::onEconomicFall(float &difference){
-    // update the glitchOffset which keeps getting added to the timeline
-    glitchOffset = difference*10;
-    
-    cout << "down " << difference*10 << endl;
-}
-
-
-int video_width = 800;
-int video_height = 450;
-
-
 
 //--------------------------------------------------------------
 void ofApp::setup()
@@ -53,6 +9,11 @@ void ofApp::setup()
     
     isFullscreen = false;
     isPlaying = false;
+    isGlitch = true;
+    
+    // the global video width and height
+    videoWidth.set(800);
+    videoHeight.set(450);
     
     // fill the timeline with nothing
     for (int i = 0; i < 800; i++) {
@@ -63,19 +24,19 @@ void ofApp::setup()
     ofAddListener(economics.onEconomicRise, this, &ofApp::onEconomicRise);
     ofAddListener(economics.onEconomicFall, this, &ofApp::onEconomicFall);
     
-    texture.allocate(video_width, video_height, GL_RGB);
+    texture.allocate(videoWidth, videoHeight, GL_RGB);
     
     // setup the videoplayer
     video.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/BigFreezeSecondEditSansSon.mp4");
     video.setLoopState(OF_LOOP_NORMAL );
     play();
-    
+  
     gui.setup();
-    gui.add( yOffsetAmount.set("Y Offset", 82, 0, 500) );
+    gui.add( yOffsetAmount.set("Y Offset", 30, 0, 500) );
     gui.add( yOffsetSpeed.set("Y Speed", 6, 1, 30) );
-    gui.add( yElasticity.set("Elasticity", 0.005f, 0.001f, 0.1f) );
-    gui.add( economics.updateThreshold );
-    gui.add( col1.set("colour1", ofColor(255,0,0), ofColor(0), ofColor(255)) );
+    gui.add( yElasticity.set("Elasticity", 0.0005f, 0.0001f, 0.1f) );
+    gui.add( economics.updateThreshold.set(0.035f) );
+    gui.add( col1.set("colour1", ofColor(162,0,0), ofColor(0), ofColor(255)) );
     gui.add( col2.set("colour2", ofColor(0,0,255), ofColor(0), ofColor(255)) );
     gui.add( col3.set("colour3", ofColor(0,255,0), ofColor(0), ofColor(255)) );
 }
@@ -131,8 +92,8 @@ void ofApp::draw()
         
         //draw video 2
         ofSetColor(col2);
-        for (int x = 0; x < video_width; x++) {
-            texture.drawSubsection(x, timeline[x]*yOffsetAmount, 1, video_height, x, 0);
+        for (int x = 0; x < videoWidth; x++) {
+            texture.drawSubsection(x, timeline[x]*yOffsetAmount, 1, videoHeight, x, 0);
         }
         
         // draw video 3
@@ -173,6 +134,47 @@ void ofApp::draw()
         gui.draw();
     }
 }
+
+
+//--------------------------------------------------------------
+void ofApp::play(){
+    isPlaying = true;
+    video.setPaused(false);
+}
+
+//--------------------------------------------------------------
+void ofApp::pause(){
+    isPlaying = false;
+    video.setPaused(true);
+}
+
+//--------------------------------------------------------------
+void ofApp::togglePlay(){
+    if (isPlaying){
+        isPlaying = false;
+        video.setPaused(true);
+    } else {
+        isPlaying = true;
+        video.setPaused(false);
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::onEconomicRise(float &difference){
+    // update the glitchOffset which keeps getting added to the timeline
+    glitchOffset = difference*10;
+    
+    cout << "up " << difference*10 << endl;
+}
+
+//--------------------------------------------------------------
+void ofApp::onEconomicFall(float &difference){
+    // update the glitchOffset which keeps getting added to the timeline
+    glitchOffset = difference*10;
+    
+    cout << "down " << difference*10 << endl;
+}
+
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)

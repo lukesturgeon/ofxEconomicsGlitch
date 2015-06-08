@@ -22,15 +22,19 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
-    ofParameter<float>  yOffsetAmount;
-    ofParameter<float>  yOffsetSpeed;
-    ofParameter<float>  yElasticity;
+    //-----------------------------------------
     
+    ofxPanel                gui;
+    ofParameter<float>      yOffsetAmount;
+    ofParameter<float>      yOffsetSpeed;
+    ofParameter<float>      yElasticity;
     ofParameter<ofColor>    col1;
     ofParameter<ofColor>    col2;
     ofParameter<ofColor>    col3;
+    ofParameter<int>        videoWidth;
+    ofParameter<int>        videoHeight;
     
-    ofxPanel            gui;
+     //-----------------------------------------
     
     
     ofVideoPlayer       video;
