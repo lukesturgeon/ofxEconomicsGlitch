@@ -27,12 +27,3 @@ void Tile::setPos(int i, int num, int numX, int numY, int srcW, int srcH, int ds
     dY = y * dH;
     
 }
-
-void Tile::update() {
-    
-    
-}
-
-void Tile::draw() {
-    
-}

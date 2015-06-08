@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>EA69C3D0-5AD2-4377-A1AE-9948F3DDA205</string>
+	<key>IDESourceControlProjectName</key>
+	<string>TheBigFreeze</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>81B86762-DB19-4105-9A08-25F52AEE46F3</key>
+		<string>https://github.com/lukesturgeon/ofx_economicsGlitcher.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>TheBigFreeze/TheBigFreeze.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>81B86762-DB19-4105-9A08-25F52AEE46F3</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/lukesturgeon/ofx_economicsGlitcher.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>81B86762-DB19-4105-9A08-25F52AEE46F3</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>81B86762-DB19-4105-9A08-25F52AEE46F3</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ofx_economicsGlitcher</string>
+		</dict>
+	</array>
+</dict>
+</plist>

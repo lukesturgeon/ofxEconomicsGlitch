@@ -32,23 +32,25 @@ public:
     
     //------------------------------------------------------
     
-    ofQTKitPlayer newsFromSomewhere;
-    ofImage currentFrame, currentTile;
-    std::vector<Tile> tileArray;
-    void initTiles();
+    ofQTKitPlayer           video;
+    ofImage                 currentFrame, currentTile;
+    std::vector<Tile>       tileArray;
+    void                    initTiles();
     
     //------------------------------------------------------
     
-    ofxPanel gui;
-    ofxIntSlider colours, pos;
-    ofxFloatSlider scale;
+    ofxPanel                gui;
+    ofxIntSlider            colours, pos;
+    ofxFloatSlider          scale;
+    
+    int video_width = 800;
+    int video_height = 450;
     
     //------------------------------------------------------
     
-    int numTiles, numTilesX, numTilesY;
-    int sourceWidth, sourceHeight, displayWidth, displayHeight;
-    
-
+    int                     numTiles, numTilesX, numTilesY;
+    int                     sourceWidth, sourceHeight, displayWidth, displayHeight;
+    bool                    isGlitch, isPlaying, isFullscreen;
     
     
 };

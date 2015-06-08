@@ -1,35 +1,39 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-void ofApp::setup(){
-    ofBackground(0, 0, 0);
+void ofApp::setup()
+{
+    ofSetWindowTitle("News From Somewhere");
+    ofBackground(0);
     
-    newsFromSomewhere.setPixelFormat(OF_PIXELS_RGBA);
+    video.setPixelFormat(OF_PIXELS_RGBA);
     ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_PIXELS_AND_TEXTURE;
-    newsFromSomewhere.loadMovie("/Users/peterhudson/Desktop/RCA Projects/Rod/movies/NewsFromSomewhereSecondEdit.mp4", decodeMode);
-    // newsFromSomewhere.setSynchronousSeeking(false);
-    newsFromSomewhere.play();
+    video.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/NewsFromSomewhereFourthEdit.mp4", decodeMode);
+    
+    video.play();
     numTilesX = 16;
     numTilesY = 9;
     initTiles();
+    
     gui.setup("controls");
     gui.add( colours.setup("colours", 0, 0, 255) );
     gui.add( scale.setup("scale", 1, 1, 10) );
     gui.add( pos.setup("pos", 0, -50, 50) );
-    
-    
 }
 
 //--------------------------------------------------------------
-void ofApp::update(){
+void ofApp::update()
+{
+    video.update();
     
-    newsFromSomewhere.update();
-    
-    if(newsFromSomewhere.isFrameNew()) {
-    
-        currentFrame.setFromPixels( newsFromSomewhere.getPixelsRef() );
+    if(video.isFrameNew())
+    {
+        // copy the current pixels
+        currentFrame.setFromPixels( video.getPixelsRef() );
         
-        for (int i = 0; i < numTiles; i++) {
+        // loop through each tile in the grid and draw it
+        for (int i = 0; i < numTiles; i++)
+        {
             tileArray[i].img.cropFrom(currentFrame, tileArray[i].sX, tileArray[i].sY, tileArray[i].sW, tileArray[i].sH);
         }
     }
@@ -47,10 +51,17 @@ void ofApp::draw(){
         tileArray[i].img.draw(tileArray[i].dX+ofRandom(pos), tileArray[i].dY+ofRandom(pos), tileArray[i].dW*scale, tileArray[i].dH*scale);
     }
     
-    //display framerate as window title
-    std::stringstream strm;
-    strm << "fps: " << ofGetFrameRate();
-    ofSetWindowTitle(strm.str());
+    //debugger
+    string debugStr = "'f' = fullscreen";
+    if (isGlitch) {
+        debugStr += " | 'g' = turn glitch off";
+    }
+    else {
+        debugStr +=  " | 'g' = turn glitch on";
+    }
+    debugStr += " | ' ' = toggle pause | " + ofToString(ofGetFrameRate(), 0) + "fps";
+    
+    ofDrawBitmapString(debugStr, 10, ofGetHeight()-10);
     
     gui.draw();
 }
@@ -60,8 +71,8 @@ void ofApp::initTiles(){
     numTiles = numTilesX * numTilesY;
     displayWidth = ofGetWidth();
     displayHeight = ofGetHeight();
-    sourceWidth = newsFromSomewhere.getWidth();
-    sourceHeight = newsFromSomewhere.getHeight();
+    sourceWidth = video.getWidth();
+    sourceHeight = video.getHeight();
     tileArray.assign(numTiles, Tile());
     for (int i = 0; i < numTiles; i++) {
         tileArray[i].setPos(i, numTiles, numTilesX, numTilesY, sourceWidth, sourceHeight, displayWidth, displayHeight);

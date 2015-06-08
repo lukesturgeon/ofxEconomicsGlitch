@@ -46,9 +46,10 @@ int video_height = 450;
 
 
 //--------------------------------------------------------------
-void ofApp::setup() {
-    
-    ofSetWindowTitle("TheBigFreeze");
+void ofApp::setup()
+{
+    ofSetWindowTitle("The Big Freeze");
+    ofBackground(0);
     
     isFullscreen = false;
     isPlaying = false;
@@ -107,7 +108,7 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw()
 {
-    ofBackground(0);
+    
     
     
     if (isGlitch)
