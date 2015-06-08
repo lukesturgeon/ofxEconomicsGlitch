@@ -105,12 +105,18 @@ void ofApp::update() {
     }
 }
 
+
+//--------------------------------------------------------------
+void ofApp::exit()
+{
+    ofRemoveListener(economics.onEconomicRise, this, &ofApp::onEconomicRise);
+    ofRemoveListener(economics.onEconomicFall, this, &ofApp::onEconomicFall);
+}
+
+
 //--------------------------------------------------------------
 void ofApp::draw()
-{
-    
-    
-    
+{    
     if (isGlitch)
     {
         // draw a glitch
