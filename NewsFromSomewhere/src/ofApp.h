@@ -5,6 +5,7 @@
 #include "ofImage.h"
 #include "ofxGui.h"
 #include "Tile.h"
+#include "ofxEconomics.h"
 
 
 
@@ -33,6 +34,8 @@ public:
     
     //------------------------------------------------------
     
+    ofxEconomics            economics;
+    
     ofQTKitPlayer           video;
     ofImage                 currentFrame, currentTile;
     std::vector<Tile>       tileArray;
@@ -42,21 +45,20 @@ public:
     void                    initTiles();
     void                    numTilesXChanged(int & newNumX);
     void                    numTilesYChanged(int & newNumY);
+    void                    onEconomicFall(float & difference);
+    void                    onEconomicRise(float & difference);
     
     //------------------------------------------------------
     
     ofxPanel                gui;
     ofxIntSlider            colours, pos, numTilesX, numTilesY;
-    ofxFloatSlider          scale;
+    ofxFloatSlider          scale, animationDecay;
+    ofParameter<int>        videoWidth;
+    ofParameter<int>        videoHeight;
     
-    int video_width = 800;
-    int video_height = 450;
-    
-    //------------------------------------------------------
-    
-    int                     numTiles;
-    int                     sourceWidth, sourceHeight, displayWidth, displayHeight;
-    bool                    isGlitch, isPlaying, isFullscreen;
+    int                     coloursAnimator, posAnimator;
+    float                   scaleAnimator;
+    bool                    isGlitch, isPlaying, isFullscreen, isSetup;
     
     
 };

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		11F2758D1B25DDEC00F4BF49 /* ofxEconomics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11F2758B1B25DDEC00F4BF49 /* ofxEconomics.cpp */; };
 		1CD33E884D9E3358252E82A1 /* ofxToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907C5B5E104864A2D3A25745 /* ofxToggle.cpp */; };
 		242CBEE21B21DA4F00B0DD7D /* Tile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 242CBEE01B21DA4F00B0DD7D /* Tile.cpp */; };
 		483908258D00B98B4BE69F07 /* ofxLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78D67A00EB899FAC09430597 /* ofxLabel.cpp */; };
@@ -69,6 +70,8 @@
 
 /* Begin PBXFileReference section */
 		0A1DAC09F322AE313A40706D /* ofxToggle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxToggle.h; path = ../../../addons/ofxGui/src/ofxToggle.h; sourceTree = SOURCE_ROOT; };
+		11F2758B1B25DDEC00F4BF49 /* ofxEconomics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEconomics.cpp; sourceTree = "<group>"; };
+		11F2758C1B25DDEC00F4BF49 /* ofxEconomics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEconomics.h; sourceTree = "<group>"; };
 		15F2C6477A769C03A56D1401 /* ofxSlider.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxSlider.cpp; path = ../../../addons/ofxGui/src/ofxSlider.cpp; sourceTree = SOURCE_ROOT; };
 		17E65988300FBD9AAA2CD0CA /* ofxGui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxGui.h; path = ../../../addons/ofxGui/src/ofxGui.h; sourceTree = SOURCE_ROOT; };
 		1C0DA2561397A7DE0246858B /* ofxGuiGroup.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxGuiGroup.h; path = ../../../addons/ofxGui/src/ofxGuiGroup.h; sourceTree = SOURCE_ROOT; };
@@ -139,6 +142,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		11F275891B25DDDD00F4BF49 /* ofxEconomics */ = {
+			isa = PBXGroup;
+			children = (
+				11F2758A1B25DDEC00F4BF49 /* src */,
+			);
+			name = ofxEconomics;
+			sourceTree = "<group>";
+		};
+		11F2758A1B25DDEC00F4BF49 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				11F2758B1B25DDEC00F4BF49 /* ofxEconomics.cpp */,
+				11F2758C1B25DDEC00F4BF49 /* ofxEconomics.h */,
+			);
+			name = src;
+			path = ../src;
+			sourceTree = "<group>";
+		};
 		480A780D8D0308AE4A368801 /* ofxGui */ = {
 			isa = PBXGroup;
 			children = (
@@ -174,6 +195,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				11F275891B25DDDD00F4BF49 /* ofxEconomics */,
 				480A780D8D0308AE4A368801 /* ofxGui */,
 			);
 			name = addons;
@@ -348,6 +370,7 @@
 			files = (
 				242CBEE21B21DA4F00B0DD7D /* Tile.cpp in Sources */,
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
+				11F2758D1B25DDEC00F4BF49 /* ofxEconomics.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
 				856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */,
 				5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */,
