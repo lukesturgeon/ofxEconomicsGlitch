@@ -2,7 +2,7 @@
 
 ofxEconomics::ofxEconomics() {
     economicState = -1;
-    updateThreshold.set("updateThreshold", 0.95f, 0.0f, 1.0f);
+    updateThreshold.set("updateThreshold", 0.64f, 0.0f, 1.0f);
     
     // fild the array with random perlin noise
     for(int i = 0; i < 100; i++)

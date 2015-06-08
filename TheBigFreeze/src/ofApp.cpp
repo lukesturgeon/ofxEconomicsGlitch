@@ -47,6 +47,9 @@ int video_height = 450;
 
 //--------------------------------------------------------------
 void ofApp::setup() {
+    
+    ofSetWindowTitle("TheBigFreeze");
+    
     isFullscreen = false;
     isPlaying = false;
     
@@ -67,13 +70,13 @@ void ofApp::setup() {
     play();
     
     gui.setup();
-    gui.add( yOffsetAmount.set("Y Offset", 100, 0, 500) );
-    gui.add( yOffsetSpeed.set("Y Speed", 15, 1, 30) );
-    gui.add( yElasticity.set("Elasticity", 0.01f, 0.005f, 0.1f) );
+    gui.add( yOffsetAmount.set("Y Offset", 82, 0, 500) );
+    gui.add( yOffsetSpeed.set("Y Speed", 6, 1, 30) );
+    gui.add( yElasticity.set("Elasticity", 0.005f, 0.001f, 0.1f) );
     gui.add( economics.updateThreshold );
     gui.add( col1.set("colour1", ofColor(255,0,0), ofColor(0), ofColor(255)) );
-    gui.add( col2.set("colour2", ofColor(0,255,0), ofColor(0), ofColor(255)) );
-    gui.add( col3.set("colour3", ofColor(0,0,255), ofColor(0), ofColor(255)) );
+    gui.add( col2.set("colour2", ofColor(0,0,255), ofColor(0), ofColor(255)) );
+    gui.add( col3.set("colour3", ofColor(0,255,0), ofColor(0), ofColor(255)) );
 }
 
 //--------------------------------------------------------------
@@ -86,7 +89,9 @@ void ofApp::update() {
     }
     
     // update economics
-    economics.update();
+    if (isPlaying){
+        economics.update();
+    }
     
     for (int i = 0; i < yOffsetSpeed; i++) {
         // update timeline
@@ -105,12 +110,7 @@ void ofApp::draw()
     ofBackground(0);
     
     
-    if (noGlitch)
-    {
-        // draw the original
-        video.draw((ofGetWidth() - video.width) / 2, (ofGetHeight() - video.height) / 2, video.width, video.height);
-    }
-    else
+    if (isGlitch)
     {
         // draw a glitch
         ofPushMatrix();
@@ -118,17 +118,17 @@ void ofApp::draw()
         
         ofEnableBlendMode(OF_BLENDMODE_SCREEN);
         
-        //draw RED
+        //draw video 1
         ofSetColor(col1);
         video.draw(0, 0);
         
-        //draw GREED
+        //draw video 2
         ofSetColor(col2);
         for (int x = 0; x < video_width; x++) {
             texture.drawSubsection(x, timeline[x]*yOffsetAmount, 1, video_height, x, 0);
         }
         
-        // draw BLUE
+        // draw video 3
         ofSetColor(col3);
         video.draw(0, 0);
         
@@ -136,28 +136,34 @@ void ofApp::draw()
         
         ofPopMatrix();
         
-        if (!isFullscreen){
-            
-            /*ofPushMatrix();
-            ofTranslate(0, ofGetHeight()/2);
-            
-            // draw the offset timeline
-            ofSetColor(255);
-            for (int i = 0; i < timeline.size()-1; i++) {
-                ofLine(i, timeline[i]*100, i+1, timeline[i+1]*100);
-            }
-            
-            ofLine(820, 0, 870, 0);
-            ofRect(830, 0, 30, glitchOffset*100);
-            
-            ofPopMatrix();*/
-            
-            // debugger
-            ofSetColor(255);
-            economics.draw(10,ofGetHeight()-130);
-            ofDrawBitmapString(ofToString(ofGetFrameRate()), 10, ofGetHeight()-10);
-            gui.draw();
+    }
+    else
+    {
+        // draw the original
+        ofSetColor(255);
+        video.draw((ofGetWidth() - video.width) / 2, (ofGetHeight() - video.height) / 2, video.width, video.height);
+    }
+    
+    if (!isFullscreen){
+        
+        // debugger
+        ofSetColor(255);
+        economics.draw(10,ofGetHeight()-130);
+        
+        string debugStr = "'f' = fullscreen";
+        
+        if (isGlitch) {
+            debugStr += " | 'g' = turn glitch off";
         }
+        else {
+            debugStr +=  " | 'g' = turn glitch on";
+        }
+        
+        debugStr += " | ' ' = toggle pause | " + ofToString(ofGetFrameRate(), 0) + "fps";
+        
+        ofDrawBitmapString(debugStr, 10, ofGetHeight()-10);
+        
+        gui.draw();
     }
 }
 
@@ -169,9 +175,9 @@ void ofApp::keyPressed(int key)
         isFullscreen = !isFullscreen;
         ofSetFullscreen(isFullscreen);
 	}
-    if (key == 'o')
+    if (key == 'g')
     {
-        noGlitch = !noGlitch;
+        isGlitch = !isGlitch;
     }
     if(key == ' ')
     {

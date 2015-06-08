@@ -37,7 +37,7 @@ public:
     ofxEconomics        economics;
     bool                isPlaying;
     bool                isFullscreen;
-    bool                noGlitch;
+    bool                isGlitch;
     deque<float>        timeline;
     float               glitchOffset;
     

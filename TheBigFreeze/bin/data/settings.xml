@@ -1,0 +1,10 @@
+<group>
+	<Y_Offset>82.5</Y_Offset>
+	<Y_Speed>5.35</Y_Speed>
+	<Elasticity>0.005</Elasticity>
+	<updateThreshold>0.64</updateThreshold>
+	<colour1>255, 0, 0, 255</colour1>
+	<colour2>0, 0, 255, 255</colour2>
+	<colour3>0, 255, 0, 255</colour3>
+<group/>
+</group>
