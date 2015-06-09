@@ -271,6 +271,18 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
     
 }
 
+// attempt at accounting for placement of tiles in accordance with scale modifier
+// tileArray[i].img.draw(tileArray[i].dX+ofRandom(posAnimator)-(scaleAnimator*tileArray[i].dX-tileArray[i].dX)/2, tileArray[i].dY+ofRandom(posAnimator)-(scaleAnimator*tileArray[i].dY-tileArray[i].dY)/2, tileArray[i].dW, tileArray[i].dH);
+
+// path to my video
+// /Users/peterhudson/Downloads/wetransfer-143c26/NewsFromSomewhereFourthEditWithCuts.mp4
+
+
+//ofSetColor(255);
+//for (int i = 0; i < numTiles; i++) {
+//    ofDrawBitmapString( "i = " + ofToString(i) + "\t" + ofToString(tileArray[i].dX) + " dX\t" + ofToString(tileArray[i].dY)+ " dY\t" +ofToString(tileArray[i].dW)+ " dW\t" +ofToString(tileArray[i].dH)+ " dH\t", 20, 20 + (i*12));
+//}
+
 
 //ofSetColor(255);
 //for (int i = 0; i < numTiles; i++) {

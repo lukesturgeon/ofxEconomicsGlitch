@@ -10,29 +10,29 @@
 	<string>NewsFromSomewhere</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>81B86762-DB19-4105-9A08-25F52AEE46F3</key>
+		<key>1CFABAC5E7EC7CE767760DAE2731A3AFD0D01479</key>
 		<string>https://github.com/lukesturgeon/ofx_economicsGlitcher.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>NewsFromSomewhere/NewsFromSomewhere.xcodeproj/project.xcworkspace</string>
+	<string>NewsFromSomewhere/NewsFromSomewhere.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>81B86762-DB19-4105-9A08-25F52AEE46F3</key>
+		<key>1CFABAC5E7EC7CE767760DAE2731A3AFD0D01479</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/lukesturgeon/ofx_economicsGlitcher.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>81B86762-DB19-4105-9A08-25F52AEE46F3</string>
+	<string>1CFABAC5E7EC7CE767760DAE2731A3AFD0D01479</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>81B86762-DB19-4105-9A08-25F52AEE46F3</string>
+			<string>1CFABAC5E7EC7CE767760DAE2731A3AFD0D01479</string>
 			<key>IDESourceControlWCCName</key>
 			<string>ofx_economicsGlitcher</string>
 		</dict>
