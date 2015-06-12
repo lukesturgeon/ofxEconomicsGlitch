@@ -268,7 +268,8 @@ void ofApp::gotMessage(ofMessage msg){
 
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){
-    
+    string file = dragInfo.files[0];
+    video.loadMovie(file);
 }
 
 

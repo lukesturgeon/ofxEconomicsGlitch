@@ -49,6 +49,8 @@ int formats[] = {
 //--------------------------------------------------------------
 void ofApp::setup()
 {
+//    ofSetDataPathRoot("../Resources/data/");
+    
     ofSetWindowTitle("Destructive Destruction");
     ofSetVerticalSync(true);
 	ofBackground(0);
