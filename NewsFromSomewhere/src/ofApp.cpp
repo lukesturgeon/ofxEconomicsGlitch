@@ -12,17 +12,19 @@ void ofApp::setup()
     isSetup = false;
     
     // the global video width and height
-    videoWidth.set(800);
-    videoHeight.set(450);
+    videoWidth.set(1280);
+    videoHeight.set(720);
     
     // setup economics
     ofAddListener(economics.onEconomicRise, this, &ofApp::onEconomicRise);
     ofAddListener(economics.onEconomicFall, this, &ofApp::onEconomicFall);
     
     // setup video
+    currentFrame.allocate(videoWidth, videoHeight, OF_IMAGE_COLOR);
+    
     video.setPixelFormat(OF_PIXELS_RGBA);
     ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_PIXELS_AND_TEXTURE;
-    video.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/NewsFromSomewhereFourthEdit.mp4", decodeMode);
+    video.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/NewsFromSomewhere.mp4", decodeMode);
     video.setLoopState(OF_LOOP_NORMAL );
     play();
     
@@ -105,8 +107,10 @@ void ofApp::draw()
         ofSetColor(255);
         for (int i = 0; i < tileArray.size(); i++)
         {
+            if(tileArray[i].img.bAllocated()) {
             ofSetColor(255-ofRandom(0,coloursAnimator), 255-ofRandom(0,coloursAnimator), 255-ofRandom(0,coloursAnimator), 255-ofRandom(0,coloursAnimator));
             tileArray[i].img.draw(tileArray[i].dX+ofRandom(posAnimator), tileArray[i].dY+ofRandom(posAnimator), tileArray[i].dW, tileArray[i].dH);
+            }
         }
         
         ofDisableBlendMode();
@@ -133,7 +137,7 @@ void ofApp::draw()
         debugStr += " | ' ' = toggle pause | " + ofToString(ofGetFrameRate(), 0) + "fps";
         ofDrawBitmapString(debugStr, 10, ofGetHeight()-10);
         
-        economics.draw(10,ofGetHeight()-130);
+        economics.draw(10,0);
         gui.draw();
     }
 }

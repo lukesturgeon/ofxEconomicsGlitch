@@ -1,30 +1,30 @@
 #include "ofApp.h"
 
+
 int internalFormats[] = {
     GL_RGB,
-    GL_COMPRESSED_LUMINANCE,
+//    GL_COMPRESSED_LUMINANCE,
     GL_DEPTH_COMPONENT16,
-    GL_COMPRESSED_LUMINANCE_ALPHA,
-    GL_COMPRESSED_INTENSITY,
-    GL_COMPRESSED_RGB,
-    GL_COMPRESSED_RGBA,
+//    GL_COMPRESSED_LUMINANCE_ALPHA,
+//    GL_COMPRESSED_INTENSITY,
+//    GL_COMPRESSED_RGB,
+//    GL_COMPRESSED_RGBA,
     GL_LUMINANCE,
-    GL_INTENSITY,
-    GL_INTENSITY4,
-    GL_INTENSITY8,
-    GL_INTENSITY12,
-    GL_INTENSITY16,
-    GL_R3_G3_B2,
-    GL_SLUMINANCE,
-    GL_SLUMINANCE8,
-    GL_SLUMINANCE_ALPHA,
-    GL_SLUMINANCE8_ALPHA8,
-    GL_SRGB,
-    GL_SRGB8,
-    GL_SRGB_ALPHA,
-    GL_SRGB8_ALPHA8,
+//    GL_INTENSITY,
+//    GL_INTENSITY4,
+//    GL_INTENSITY8,
+//    GL_INTENSITY12,
+//    GL_INTENSITY16,
+//    GL_R3_G3_B2,
+//    GL_SLUMINANCE,
+//    GL_SLUMINANCE8,
+//    GL_SLUMINANCE_ALPHA,
+//    GL_SLUMINANCE8_ALPHA8,
+//    GL_SRGB,
+//    GL_SRGB8,
+//    GL_SRGB_ALPHA,
+//    GL_SRGB8_ALPHA8,
     GL_DEPTH_COMPONENT,
-   
     GL_DEPTH_COMPONENT24,
     GL_DEPTH_COMPONENT32
 };
@@ -59,6 +59,10 @@ void ofApp::setup()
     isFullscreen = false;
     isGlitch = true;
     
+    // the global video width and height
+    videoWidth.set(1280);
+    videoHeight.set(720);
+    
     // setup the economics numbers
     ofAddListener(economics.onEconomicFall, this, &ofApp::onEconomicFall);
     
@@ -83,7 +87,7 @@ void ofApp::setup()
     gui.add( economics.updateThreshold.set(0.9f) );
     
     // Load the video file
-   	video.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/DestructiveDestructionFourthEdit.mp4");
+   	video.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/DestructiveDestruction.mp4");
     video.setLoopState( OF_LOOP_NORMAL );
 	play();
 }
@@ -114,6 +118,7 @@ void ofApp::draw()
     if (isGlitch){
         // draw the glitched video B
         ofSetColor( tintB );
+//        drawGlitchedVideo(video, widthPrcB, heightBAnimator, internalFormats[ innerA ], formats[ packB ]);
         drawGlitchedVideo(video, widthPrcB, heightBAnimator, internalFormats[ int(innerAnimatorA) ], formats[ int(packAnimatorB) ]);
         
         // draw the glitched video A
@@ -124,7 +129,6 @@ void ofApp::draw()
     }
     else {
         // just draw the original
-        //media.draw( (ofGetWidth() - media.width) / 2, (ofGetHeight() - media.height) / 2, media.width, media.height);
         ofSetColor(255);
         drawGlitchedVideo(video, 1.0, 1.0, GL_RGB, GL_RGB);
     }
@@ -142,11 +146,12 @@ void ofApp::draw()
         debugStr += " | ' ' = toggle pause | " + ofToString(ofGetFrameRate(), 0) + "fps";
         ofDrawBitmapString(debugStr, 10, ofGetHeight()-10);
         
-        ofDrawBitmapString(ofToString(innerAnimatorA), 10, 500);
-        ofDrawBitmapString(ofToString(packAnimatorB), 10, 530);
-        ofDrawBitmapString(ofToString(heightBAnimator), 10, 560);
-        
         economics.draw(10,ofGetHeight()-130);
+        
+        ofDrawBitmapStringHighlight("innerAnimatorA: " + ofToString(innerAnimatorA), 10, 500);
+        ofDrawBitmapStringHighlight("packAnimatorB: " + ofToString(packAnimatorB), 10, 530);
+        ofDrawBitmapStringHighlight("heightBAnimator: " + ofToString(heightBAnimator), 10, 560);
+        
         gui.draw();
     }
 }
@@ -176,9 +181,18 @@ void ofApp::play() {
 void ofApp::drawGlitchedVideo(ofVideoPlayer & video, float width, float height, float innerFormat, float packFormat)
 {
     ofTexture tex;
-    tex.allocate(video.width, video.height, innerFormat);
-    tex.loadData(video.getPixels(), video.width * width, video.height * height, packFormat);
-    tex.draw( (ofGetWidth() - video.width) / 2, (ofGetHeight() - video.height) / 2, video.width, video.height);
+    
+    try
+    {
+        tex.allocate(videoWidth, videoHeight, innerFormat);
+        tex.loadData(video.getPixels(), videoWidth * width, videoHeight * height, packFormat);
+    }
+    catch (exception& e)
+    {
+        cout << "An exception occurred. Exception Nr. " << '\n';
+    }
+    
+    tex.draw( (ofGetWidth() - videoWidth) / 2, (ofGetHeight() - videoHeight) / 2, videoWidth, videoHeight);
 }
 
 //--------------------------------------------------------------

@@ -37,7 +37,7 @@ public:
     ofxEconomics            economics;
     
     ofQTKitPlayer           video;
-    ofImage                 currentFrame, currentTile;
+    ofImage                 currentFrame;
     std::vector<Tile>       tileArray;
     void                    play();
     void                    pause();

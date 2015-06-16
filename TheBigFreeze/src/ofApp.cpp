@@ -12,11 +12,11 @@ void ofApp::setup()
     isGlitch = true;
     
     // the global video width and height
-    videoWidth.set(800);
-    videoHeight.set(450);
+    videoWidth.set(1280);
+    videoHeight.set(720);
     
     // fill the timeline with nothing
-    for (int i = 0; i < 800; i++) {
+    for (int i = 0; i < videoWidth; i++) {
         timeline.push_back( 0.0f );
     }
     
@@ -27,7 +27,7 @@ void ofApp::setup()
     texture.allocate(videoWidth, videoHeight, GL_RGB);
     
     // setup the videoplayer
-    video.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/BigFreezeSecondEditSansSon.mp4");
+    video.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/TheBigFreeze.mp4");
     video.setLoopState(OF_LOOP_NORMAL );
     play();
   

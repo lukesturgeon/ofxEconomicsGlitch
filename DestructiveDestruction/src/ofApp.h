@@ -30,6 +30,9 @@ public:
     bool                    isFullscreen;
     bool                    isGlitch;
     
+    ofParameter<int>        videoWidth;
+    ofParameter<int>        videoHeight;
+    
     ofxPanel                gui;
     ofParameter<int>        innerA;
     ofParameter<int>        packA;
