@@ -1,6 +1,7 @@
 #include "ofxEconomics.h"
 
-ofxEconomics::ofxEconomics() {
+ofxEconomics::ofxEconomics()
+{
     economicState = -1;
     updateThreshold.set("updateThreshold", 0.64f, 0.0f, 1.0f);
     
@@ -13,7 +14,8 @@ ofxEconomics::ofxEconomics() {
     randomCounter = data.size();
 }
 
-float ofxEconomics::getDataAtPercentage(float prc) {
+float ofxEconomics::getDataAtPercentage(float prc)
+{
     return data[ floor(prc*data.size()) ];
 }
 

@@ -1,6 +1,8 @@
 #include "ofApp.h"
 
 
+#define DATA_ARRAY_LENGTH 200
+
 //--------------------------------------------------------------
 void ofApp::setup()
 {
@@ -10,13 +12,14 @@ void ofApp::setup()
     isFullscreen = false;
     isPlaying = false;
     isGlitch = true;
+    isFreeScale = false;
     
     // the global video width and height
     videoWidth.set(1280);
     videoHeight.set(720);
     
     // fill the timeline with nothing
-    for (int i = 0; i < videoWidth; i++) {
+    for (int i = 0; i < DATA_ARRAY_LENGTH; i++) {
         timeline.push_back( 0.0f );
     }
     
@@ -33,7 +36,7 @@ void ofApp::setup()
   
     gui.setup();
     gui.add( yOffsetAmount.set("Y Offset", 30, 0, 500) );
-    gui.add( yOffsetSpeed.set("Y Speed", 6, 1, 30) );
+    gui.add( yOffsetSpeed.set("Y Speed", 1, 1, 30) );
     gui.add( yElasticity.set("Elasticity", 0.0005f, 0.0001f, 0.1f) );
     gui.add( economics.updateThreshold.set(0.035f) );
     gui.add( col1.set("colour1", ofColor(162,0,0), ofColor(0), ofColor(255)) );
@@ -46,22 +49,23 @@ void ofApp::update() {
     
     // update video
     video.update();
-    if (video.isFrameNew()){
+    if (video.isFrameNew())
+    {
         texture.loadData(video.getPixelsRef());
     }
     
     // update economics
     if (isPlaying){
         economics.update();
-    }
-    
-    for (int i = 0; i < yOffsetSpeed; i++) {
-        // update timeline
-        timeline.pop_front();
-        timeline.push_back(glitchOffset);
         
-        if (glitchOffset != 0) {
-            glitchOffset += (0 - glitchOffset) * yElasticity;
+        for (int i = 0; i < yOffsetSpeed; i++) {
+            // update timeline
+            timeline.pop_front();
+            timeline.push_back(glitchOffset);
+            
+            if (glitchOffset != 0) {
+                glitchOffset += (0 - glitchOffset) * yElasticity;
+            }
         }
     }
 }
@@ -77,12 +81,25 @@ void ofApp::exit()
 
 //--------------------------------------------------------------
 void ofApp::draw()
-{    
+{
     if (isGlitch)
     {
         // draw a glitch
         ofPushMatrix();
-        ofTranslate((ofGetWidth() - video.width) / 2, (ofGetHeight() - video.height) / 2);
+        
+        if(!isFreeScale)
+        {
+            // dont scale, center the video
+            ofTranslate((ofGetWidth() - videoWidth) / 2, (ofGetHeight() - videoHeight) / 2);
+        }
+        else
+        {
+            // do scale to fill screen
+            float sw = (float) ofGetWidth() / videoWidth;
+            float sh = (float) ofGetHeight() / videoHeight;
+//            cout << sw << "," << sh << endl;
+            ofScale(sw, sh);
+        }
         
         ofEnableBlendMode(OF_BLENDMODE_SCREEN);
         
@@ -92,8 +109,11 @@ void ofApp::draw()
         
         //draw video 2
         ofSetColor(col2);
-        for (int x = 0; x < videoWidth; x++) {
-            texture.drawSubsection(x, timeline[x]*yOffsetAmount, 1, videoHeight, x, 0);
+        
+        int colWidth = videoWidth / DATA_ARRAY_LENGTH;
+        for (int i = 0; i < DATA_ARRAY_LENGTH; i++)
+        {
+            texture.drawSubsection(colWidth*i, timeline[ i ]*yOffsetAmount, colWidth, videoHeight, colWidth*i, 0);
         }
         
         // draw video 3
@@ -109,7 +129,16 @@ void ofApp::draw()
     {
         // draw the original
         ofSetColor(255);
-        video.draw((ofGetWidth() - video.width) / 2, (ofGetHeight() - video.height) / 2, video.width, video.height);
+        
+        if(isFreeScale)
+        {
+            video.draw(0,0,ofGetWidth(),ofGetHeight());
+        }
+        else
+        {
+            video.draw((ofGetWidth() - video.width) / 2, (ofGetHeight() - video.height) / 2, video.width, video.height);
+        }
+        
     }
     
     if (!isFullscreen){
@@ -121,14 +150,15 @@ void ofApp::draw()
         string debugStr = "'f' = fullscreen";
         
         if (isGlitch) {
-            debugStr += " | 'g' = turn glitch off";
+            debugStr += " | 'g/[click]' = glitch off";
         }
         else {
-            debugStr +=  " | 'g' = turn glitch on";
+            debugStr +=  " | 'g/[click]' = glitch on";
         }
         
-        debugStr += " | ' ' = toggle pause | " + ofToString(ofGetFrameRate(), 0) + "fps";
-        
+        debugStr += " | ' ' = toggle pause";
+        debugStr += " | 's' = toggle scale";
+        debugStr += " | " + ofToString(ofGetFrameRate(), 0) + "fps";
         ofDrawBitmapString(debugStr, 10, ofGetHeight()-10);
         
         gui.draw();
@@ -164,7 +194,7 @@ void ofApp::onEconomicRise(float &difference){
     // update the glitchOffset which keeps getting added to the timeline
     glitchOffset = difference*10;
     
-    cout << "up " << difference*10 << endl;
+//    cout << "up " << difference*10 << endl;
 }
 
 //--------------------------------------------------------------
@@ -172,13 +202,17 @@ void ofApp::onEconomicFall(float &difference){
     // update the glitchOffset which keeps getting added to the timeline
     glitchOffset = difference*10;
     
-    cout << "down " << difference*10 << endl;
+//    cout << "down " << difference*10 << endl;
 }
 
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)
 {
+    if (key == 's')
+    {
+        isFreeScale = !isFreeScale;
+    }
     if (key == 'f')
     {
         isFullscreen = !isFullscreen;
@@ -215,8 +249,10 @@ void ofApp::mousePressed(int x, int y, int button){
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-    
+void ofApp::mouseReleased(int x, int y, int button)
+{
+    // toggle glitch
+    isGlitch = !isGlitch;
 }
 
 //--------------------------------------------------------------

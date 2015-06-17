@@ -58,6 +58,7 @@ void ofApp::setup()
     isPlaying = false;
     isFullscreen = false;
     isGlitch = true;
+    isFreeScale = false;
     
     // the global video width and height
     videoWidth.set(1280);
@@ -138,12 +139,14 @@ void ofApp::draw()
         //debugger
         string debugStr = "'f' = fullscreen";
         if (isGlitch) {
-            debugStr += " | 'g' = turn glitch off";
+            debugStr += " | 'g'/[click] = glitch off";
         }
         else {
-            debugStr +=  " | 'g' = turn glitch on";
+            debugStr +=  " | 'g'/[click] = glitch on";
         }
-        debugStr += " | ' ' = toggle pause | " + ofToString(ofGetFrameRate(), 0) + "fps";
+        debugStr += " | ' ' = toggle pause";
+        debugStr += " | 's' = toggle scale";
+        debugStr += " | " + ofToString(ofGetFrameRate(), 0) + "fps";
         ofDrawBitmapString(debugStr, 10, ofGetHeight()-10);
         
         economics.draw(10,ofGetHeight()-130);
@@ -192,7 +195,17 @@ void ofApp::drawGlitchedVideo(ofVideoPlayer & video, float width, float height, 
         cout << "An exception occurred. Exception Nr. " << '\n';
     }
     
-    tex.draw( (ofGetWidth() - videoWidth) / 2, (ofGetHeight() - videoHeight) / 2, videoWidth, videoHeight);
+    if (isFreeScale)
+    {
+        // dont constran proportions, just fill the screen
+        tex.draw( 0, 0, ofGetWidth(), ofGetHeight());
+    }
+    else
+    {
+        // keep the video at original width and height
+        tex.draw( (ofGetWidth() - videoWidth) / 2, (ofGetHeight() - videoHeight) / 2, videoWidth, videoHeight);
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -208,6 +221,10 @@ void ofApp::onEconomicFall(float &difference)
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)
 {
+    if (key == 's')
+    {
+        isFreeScale = !isFreeScale;
+    }
     if (key == 'f')
     {
         isFullscreen = !isFullscreen;
@@ -215,6 +232,7 @@ void ofApp::keyPressed(int key)
 	}
     if (key == 'g')
     {
+        // toggle glitch
         isGlitch = !isGlitch;
     }
     if(key == ' ')
@@ -244,8 +262,10 @@ void ofApp::mousePressed(int x, int y, int button){
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-    
+void ofApp::mouseReleased(int x, int y, int button)
+{
+    // toggle glitch
+    isGlitch = !isGlitch;
 }
 
 //--------------------------------------------------------------

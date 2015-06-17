@@ -58,7 +58,7 @@ public:
     
     int                     coloursAnimator, posAnimator;
     float                   scaleAnimator;
-    bool                    isGlitch, isPlaying, isFullscreen, isSetup;
+    bool                    isGlitch, isPlaying, isFullscreen, isSetup, isFreeScale;
     
     
 };

@@ -10,6 +10,7 @@ void ofApp::setup()
     isPlaying = false;
     isGlitch = true;
     isSetup = false;
+    isFreeScale = false;
     
     // the global video width and height
     videoWidth.set(1280);
@@ -93,11 +94,23 @@ void ofApp::draw()
 {
     // center the video in the screen
     ofPushMatrix();
-    ofTranslate((ofGetWidth() - videoWidth) / 2, (ofGetHeight() - videoHeight) / 2);
+    
+    if(!isFreeScale)
+    {
+        // dont scale, center the video
+        ofTranslate((ofGetWidth() - videoWidth) / 2, (ofGetHeight() - videoHeight) / 2);
+    }
+    else
+    {
+        // do scale to fill screen
+        float sw = (float) ofGetWidth() / videoWidth;
+        float sh = (float) ofGetHeight() / videoHeight;
+        cout << sw << "," << sh << endl;
+        ofScale(sw, sh);
+    }
     
     if (isGlitch)
     {
-        
         ofSetColor(255);
         currentFrame.draw(0, 0);
         
@@ -129,12 +142,14 @@ void ofApp::draw()
         //debugger
         string debugStr = "'f' = fullscreen";
         if (isGlitch) {
-            debugStr += " | 'g' = turn glitch off";
+            debugStr += " | 'g/[click]' = glitch off";
         }
         else {
-            debugStr +=  " | 'g' = turn glitch on";
+            debugStr +=  " | 'g/[click]' = glitch on";
         }
-        debugStr += " | ' ' = toggle pause | " + ofToString(ofGetFrameRate(), 0) + "fps";
+        debugStr += " | ' ' = toggle pause";
+        debugStr += " | 's' = toggle scale";
+        debugStr += " | " + ofToString(ofGetFrameRate(), 0) + "fps";
         ofDrawBitmapString(debugStr, 10, ofGetHeight()-10);
         
         economics.draw(10,0);
@@ -179,7 +194,8 @@ void ofApp::numTilesYChanged(int &newNumY)
 //--------------------------------------------------------------
 void ofApp::initTiles()
 {
-    if (isSetup) {
+    if (isSetup)
+    {
         cout << "initTiles" << endl;
         
         int numTiles = numTilesX * numTilesY;
@@ -220,6 +236,11 @@ void ofApp::togglePlay(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)
 {
+    if (key == 's')
+    {
+        // change the scale mode
+        isFreeScale = !isFreeScale;
+    }
     if (key == 'f')
     {
         isFullscreen = !isFullscreen;
@@ -256,8 +277,10 @@ void ofApp::mousePressed(int x, int y, int button){
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-    
+void ofApp::mouseReleased(int x, int y, int button)
+{
+    // toggle glitch
+    isGlitch = !isGlitch;
 }
 
 //--------------------------------------------------------------
