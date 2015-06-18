@@ -30,6 +30,7 @@ public:
     bool                    isFullscreen;
     bool                    isGlitch;
     bool                    isFreeScale;
+    bool                    isVideoFinished;
     
     ofParameter<int>        videoWidth;
     ofParameter<int>        videoHeight;

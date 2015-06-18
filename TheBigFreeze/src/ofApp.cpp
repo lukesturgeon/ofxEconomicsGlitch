@@ -13,6 +13,7 @@ void ofApp::setup()
     isPlaying = false;
     isGlitch = true;
     isFreeScale = false;
+    isVideoFinished = true;
     
     // the global video width and height
     videoWidth.set(1280);
@@ -33,12 +34,11 @@ void ofApp::setup()
     video.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/TheBigFreeze.mp4");
     video.setLoopState(OF_LOOP_NORMAL );
     play();
-  
+    
     gui.setup();
     gui.add( yOffsetAmount.set("Y Offset", 30, 0, 500) );
     gui.add( yOffsetSpeed.set("Y Speed", 1, 1, 30) );
     gui.add( yElasticity.set("Elasticity", 0.0005f, 0.0001f, 0.1f) );
-    gui.add( economics.updateThreshold.set(0.035f) );
     gui.add( col1.set("colour1", ofColor(162,0,0), ofColor(0), ofColor(255)) );
     gui.add( col2.set("colour2", ofColor(0,0,255), ofColor(0), ofColor(255)) );
     gui.add( col3.set("colour3", ofColor(0,255,0), ofColor(0), ofColor(255)) );
@@ -52,6 +52,17 @@ void ofApp::update() {
     if (video.isFrameNew())
     {
         texture.loadData(video.getPixelsRef());
+        
+        // clear data when video resets, to make data interesting
+        if(video.getPosition() == 1.0 && !isVideoFinished){
+            cout << "VIDEO END, RESET DATA" << endl;
+            economics.resetHistory();
+            isVideoFinished = true;
+        }
+        if (video.getPosition() > 0.0 && isVideoFinished) {
+            cout << "VIDEO STARTING" << endl;
+            isVideoFinished = false;
+        }
     }
     
     // update economics
@@ -97,7 +108,7 @@ void ofApp::draw()
             // do scale to fill screen
             float sw = (float) ofGetWidth() / videoWidth;
             float sh = (float) ofGetHeight() / videoHeight;
-//            cout << sw << "," << sh << endl;
+            //            cout << sw << "," << sh << endl;
             ofScale(sw, sh);
         }
         
@@ -161,6 +172,8 @@ void ofApp::draw()
         debugStr += " | " + ofToString(ofGetFrameRate(), 0) + "fps";
         ofDrawBitmapString(debugStr, 10, ofGetHeight()-10);
         
+        ofDrawBitmapStringHighlight(ofToString(glitchOffset), 20, 500);
+        
         gui.draw();
     }
 }
@@ -191,18 +204,22 @@ void ofApp::togglePlay(){
 
 //--------------------------------------------------------------
 void ofApp::onEconomicRise(float &difference){
-    // update the glitchOffset which keeps getting added to the timeline
-    glitchOffset = difference*10;
+    glitchOffset = difference;
     
-//    cout << "up " << difference*10 << endl;
+    // maps the incoming number to an effect
+    // 1 is the highest it could drop with the data provided
+    // 0-0.99999 is a drop that's small than the max
+    cout << "> rise with " << difference << endl;
 }
 
 //--------------------------------------------------------------
 void ofApp::onEconomicFall(float &difference){
-    // update the glitchOffset which keeps getting added to the timeline
-    glitchOffset = difference*10;
+    glitchOffset = -difference;
     
-//    cout << "down " << difference*10 << endl;
+    // maps the incoming number to an effect
+    // 1 is the highest it could drop with the data provided
+    // 0-0.99999 is a drop that's small than the max
+    cout << "> drop with " << difference << endl;
 }
 
 

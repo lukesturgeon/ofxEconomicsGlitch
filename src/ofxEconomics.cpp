@@ -1,17 +1,17 @@
 #include "ofxEconomics.h"
 
+#define MIN_VALUE_DEFAULT 1000
+#define MAX_VALUE_DEFAULT 0
+
 ofxEconomics::ofxEconomics()
 {
-    economicState = -1;
-    updateThreshold.set("updateThreshold", 0.64f, 0.0f, 1.0f);
+    isEmpty = true;
+    minValue = MIN_VALUE_DEFAULT;
+    maxValue = MAX_VALUE_DEFAULT;
     
-    // fild the array with random perlin noise
-    for(int i = 0; i < 100; i++)
-    {
-        data.push_back( ofSignedNoise( 0.1*i ) );
-    }
-    
-    randomCounter = data.size();
+    // listen on the given port
+	cout << "[OSC] listening for osc on port " << PORT << "\n";
+	receiver.setup(PORT);
 }
 
 float ofxEconomics::getDataAtPercentage(float prc)
@@ -21,32 +21,73 @@ float ofxEconomics::getDataAtPercentage(float prc)
 
 void ofxEconomics::update()
 {
-    if(ofRandomf() > updateThreshold)
-    {
-        // get new data
-        float n = ofSignedNoise( 0.1*randomCounter++ );
-        data.push_back( n );
-        data.pop_front();
+    // check for waiting messages
+	while(receiver.hasWaitingMessages()){
         
-        // check for increase or decrease based on the last 5 values
-        float avg = 0.0f;
-        for (int i = 1; i < 6; i++){
-            avg += data[ data.size()-i ];
-        }
-        avg /= 5;
+        // get the next message
+		ofxOscMessage m;
+		receiver.getNextMessage(&m);
         
-        // check for increase or decrease based on all values
-        float diff = n-avg;
+        // check for data message
+		if(m.getAddress() == "/LiveFeeder/Update"){
+            
+			// expect arg as a float
+			float n = ofToFloat( m.getArgAsString(0) );
+            
+            // if first time, fill the history of the graph
+            if(isEmpty){
+                // fild the array with random perlin noise
+                for(int i = 0; i < NUM_DATA; i++) {
+                    data.push_back( n );
+                }
+                isEmpty = false;
+            }
+            else
+            {
+                // just push in the back
+                data.push_back( n );
+                data.pop_front();
+            }
+            
+            
+            if(n < minValue) {
+                minValue = n;
+            }
+            if (n > maxValue){
+                maxValue = n;
+            }
+            
+            //            cout << "new value is " << n << endl;
+            
+            // check for increase or decrease based on the last value
+            if (n < data[NUM_DATA-2]) {
+                float maxDiff = maxValue-minValue;
+                float diff = maxValue-n;
+                float norm = ofMap(diff, 0, maxDiff, 0, 1);
+                
+                ofNotifyEvent(onEconomicFall, norm );
+                
+            }
+            else if (n > data[NUM_DATA-2])
+            {
+                float maxDiff = maxValue-minValue;
+                float diff = maxValue-n;
+                float norm = ofMap(diff, 0, maxDiff, 0, 1);
+                
+                ofNotifyEvent(onEconomicRise, n);
+            }
+		}
         
-        if (n > avg) {
-            economicState = OFX_ECONOMIC_RISE;
-            ofNotifyEvent(onEconomicRise, diff);
-        }
-        else
-        {
-            economicState = OFX_ECONOMIC_FALL;
-            ofNotifyEvent(onEconomicFall, diff);
-        }
+    }
+}
+
+void ofxEconomics::resetHistory(){
+    isEmpty = true;
+    minValue = MIN_VALUE_DEFAULT;
+    maxValue = MAX_VALUE_DEFAULT;
+    
+    for(int i = 0; i < NUM_DATA; i++) {
+        data.push_back( 0.0f );
     }
 }
 
@@ -61,18 +102,18 @@ void ofxEconomics::draw(int x, int y)
     
     // draw the data
     ofSetColor(255);
-    for(int i = 1; i < data.size(); i++)
-    {
-        ofLine(i-1, ofMap(data[i-1], -1, 1, 100, 0),
-               i, ofMap(data[i], -1, 1, 100, 0) );
+    
+    if(minValue!=maxValue){
+        for(int i = 1; i < data.size(); i++)
+        {
+            ofLine(i-1, ofMap(data[i-1], minValue, maxValue, 100, 0),
+                   i, ofMap(data[i], minValue, maxValue, 100, 0) );
+        }
     }
     
-    if (economicState == OFX_ECONOMIC_FALL){
-        ofSetColor(255, 0, 0);
-    } else {
-        ofSetColor(0, 255, 0);
-    }
-    ofRect(5, 5, 10, 10);
+    ofDrawBitmapString(ofToString(maxValue), 100, 0);
+    ofDrawBitmapString(ofToString(minValue), 100, 100);
+    ofDrawBitmapStringHighlight(ofToString(data[NUM_DATA-1]), 100, 50);
     
     ofPopStyle();
     ofPopMatrix();

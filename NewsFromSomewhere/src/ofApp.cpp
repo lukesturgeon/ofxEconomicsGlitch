@@ -11,6 +11,7 @@ void ofApp::setup()
     isGlitch = true;
     isSetup = false;
     isFreeScale = false;
+    isVideoFinished = true;
     
     // the global video width and height
     videoWidth.set(1280);
@@ -37,10 +38,9 @@ void ofApp::setup()
     gui.add( colours.setup("colours", 0, 0, 255) );
     gui.add( scale.setup("scale", 1.0f, 1.0f, 0.001f) );
     gui.add( pos.setup("pos", 0, 0, 20) );
-    gui.add( numTilesX.setup("cols", 16, 1, 24) );
-    gui.add( numTilesY.setup("rows", 4, 1, 24) );
-    gui.add( economics.updateThreshold.set(0.7f) );
-    gui.add( animationDecay.setup("elasticity", 0.05, 0.0001, 0.2) );
+    gui.add( numTilesX.setup("cols", 10, 1, 24) );
+    gui.add( numTilesY.setup("rows", 8, 1, 24) );
+    gui.add( animationDecay.setup("elasticity", 0.01, 0.0001, 0.2) );
     
     // start the animation values on the same values
     coloursAnimator = 0;
@@ -77,8 +77,19 @@ void ofApp::update()
         {
             tileArray[i].img.cropFrom(currentFrame, tileArray[i].sX, tileArray[i].sY, tileArray[i].sW*scaleAnimator, tileArray[i].sH*scaleAnimator);
         }
-    }
-
+        
+        // clear data when video resets, to make data interesting
+        if(video.getPosition() == 1.0 && !isVideoFinished){
+            cout << "VIDEO END, RESET DATA" << endl;
+            economics.resetHistory();
+            isVideoFinished = true;
+        }
+        if (video.getPosition() > 0.0 && isVideoFinished) {
+            cout << "VIDEO STARTING" << endl;
+            isVideoFinished = false;
+        }
+    }    
+    
     // update the numbers
     economics.update();
     
@@ -105,7 +116,6 @@ void ofApp::draw()
         // do scale to fill screen
         float sw = (float) ofGetWidth() / videoWidth;
         float sh = (float) ofGetHeight() / videoHeight;
-        cout << sw << "," << sh << endl;
         ofScale(sw, sh);
     }
     
@@ -121,8 +131,8 @@ void ofApp::draw()
         for (int i = 0; i < tileArray.size(); i++)
         {
             if(tileArray[i].img.bAllocated()) {
-            ofSetColor(255-ofRandom(0,coloursAnimator), 255-ofRandom(0,coloursAnimator), 255-ofRandom(0,coloursAnimator), 255-ofRandom(0,coloursAnimator));
-            tileArray[i].img.draw(tileArray[i].dX+ofRandom(posAnimator), tileArray[i].dY+ofRandom(posAnimator), tileArray[i].dW, tileArray[i].dH);
+                ofSetColor(255-ofRandom(0,coloursAnimator), 255-ofRandom(0,coloursAnimator), 255-ofRandom(0,coloursAnimator), 255-ofRandom(0,coloursAnimator));
+                tileArray[i].img.draw(tileArray[i].dX+ofRandom(posAnimator), tileArray[i].dY+ofRandom(posAnimator), tileArray[i].dW, tileArray[i].dH);
             }
         }
         
@@ -152,8 +162,11 @@ void ofApp::draw()
         debugStr += " | " + ofToString(ofGetFrameRate(), 0) + "fps";
         ofDrawBitmapString(debugStr, 10, ofGetHeight()-10);
         
-        economics.draw(10,0);
+        ofDrawBitmapStringHighlight("scaleAnimator: " + ofToString(scaleAnimator), 10, 500);
+        
         gui.draw();
+        
+        economics.draw(10,ofGetHeight()-130);
     }
 }
 
@@ -161,18 +174,22 @@ void ofApp::draw()
 //--------------------------------------------------------------
 void ofApp::onEconomicRise(float &difference)
 {
-    
+    // maps the incoming number to an effect
+    // 1 is the highest it could drop with the data provided
+    // 0-0.99999 is a drop that's small than the max
+    cout << "> rise with " << difference << endl;
+    scaleAnimator = ofMap(abs(difference), 0.0f, 1.0f, scale.getMin(), scale.getMax());
     
 }
 
 //--------------------------------------------------------------
 void ofApp::onEconomicFall(float &difference)
 {
-    // maps the 0.0-2.0 value to a colour range
-    // most commons value range is:0.01-0.35 with perlin noise
-//    coloursAnimator = ofMap(abs(difference), 0.01, 0.35, 1, 255, true);
-    scaleAnimator = ofMap(abs(difference), 0.01, 0.35, scale.getMin(), scale.getMax());
-//    posAnimator = ofMap(abs(difference), 0.01, 0.35, pos.getMin(), pos.getMax());
+    // maps the incoming number to an effect
+    // 1 is the highest it could drop with the data provided
+    // 0-0.99999 is a drop that's small than the max
+    cout << "> drop with " << difference << endl;
+    scaleAnimator = ofMap(abs(difference), 0.0f, 1.0f, scale.getMin(), scale.getMax());
 }
 
 

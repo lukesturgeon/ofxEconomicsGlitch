@@ -38,8 +38,8 @@ int formats[] = {
     GL_ALPHA,
     
     GL_BGR,
-    GL_RGBA,
-    GL_BGRA,
+//    GL_RGBA,
+//    GL_BGRA,
     GL_LUMINANCE,
     GL_LUMINANCE_ALPHA
 };
@@ -59,6 +59,7 @@ void ofApp::setup()
     isFullscreen = false;
     isGlitch = true;
     isFreeScale = false;
+    isVideoFinished = true;
     
     // the global video width and height
     videoWidth.set(1280);
@@ -84,9 +85,7 @@ void ofApp::setup()
     gui.add( heightPrcB.set("height", 1.0f, 0.0f, 1.0f));
     gui.add( tintB.set("tint", ofColor(255), ofColor(0,0), ofColor(255)) );
     
-    gui.add( animationDecay.setup("Elasticity", 0.05f, 0.0001f, 0.1f) );
-    gui.add( economics.updateThreshold.set(0.9f) );
-    
+    gui.add( animationDecay.setup("Elasticity", 0.005f, 0.0001f, 0.1f) );
     // Load the video file
    	video.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/DestructiveDestruction.mp4");
     video.setLoopState( OF_LOOP_NORMAL );
@@ -105,9 +104,28 @@ void ofApp::update()
     economics.update();
 	video.update();
     
+    if(video.isFrameNew()){
+        // clear data when video resets, to make data interesting
+        if(video.getPosition() == 1.0 && !isVideoFinished){
+            cout << "VIDEO END, RESET DATA" << endl;
+            economics.resetHistory();
+            isVideoFinished = true;
+        }
+        if (video.getPosition() > 0.0 && isVideoFinished) {
+            cout << "VIDEO STARTING" << endl;
+            isVideoFinished = false;
+        }
+    }
+    
     // ease back the animations
-    innerAnimatorA += (innerA-innerAnimatorA) * animationDecay;
-    packAnimatorB += (packB-packAnimatorB) * animationDecay;
+    if (innerAnimatorA > 0.1){
+        innerAnimatorA += (innerA-innerAnimatorA) * animationDecay;
+    }
+    if (packAnimatorB > 0.1){
+        packAnimatorB += (packB-packAnimatorB) * animationDecay;
+//        cout << packAnimatorB << endl;
+    }
+    
     heightBAnimator += (heightPrcB-heightBAnimator) * animationDecay;
 }
 
@@ -120,7 +138,7 @@ void ofApp::draw()
         // draw the glitched video B
         ofSetColor( tintB );
 //        drawGlitchedVideo(video, widthPrcB, heightBAnimator, internalFormats[ innerA ], formats[ packB ]);
-        drawGlitchedVideo(video, widthPrcB, heightBAnimator, internalFormats[ int(innerAnimatorA) ], formats[ int(packAnimatorB) ]);
+        drawGlitchedVideo(video, widthPrcB, heightPrcB, internalFormats[ int(innerAnimatorA) ], formats[ int(packAnimatorB) ]);
         
         // draw the glitched video A
         ofEnableBlendMode(OF_BLENDMODE_SCREEN);
@@ -211,11 +229,13 @@ void ofApp::drawGlitchedVideo(ofVideoPlayer & video, float width, float height, 
 //--------------------------------------------------------------
 void ofApp::onEconomicFall(float &difference)
 {
-    // maps the 0.0-2.0 value to a colour range
-    // most commons value range is:0.01-0.35 with perlin noise
-    innerAnimatorA = ofMap(abs(difference), 0.01, 0.35, innerA.getMin(), innerA.getMax());
-    packAnimatorB = ofMap(abs(difference), 0.01, 0.35, packB.getMin(), packB.getMax());
-    heightBAnimator = ofMap(abs(difference), 0.01, 0.35, heightPrcB.getMax(), heightPrcB.getMin());
+    // maps the incoming number to an effect
+    // 1 is the highest it could drop with the data provided
+    // 0-0.99999 is a drop that's small than the max
+    cout << "drop with " << difference << endl;
+    innerAnimatorA = ofMap(abs(difference), 0.0f, 1.0f, innerA.getMin(), innerA.getMax());
+    packAnimatorB = ofMap(abs(difference), 0.0f, 1.0f, packB.getMin(), packB.getMax());
+    heightBAnimator = ofMap(abs(difference), 0.0f, 1.0f, heightPrcB.getMax(), heightPrcB.getMin());
 }
 
 //--------------------------------------------------------------

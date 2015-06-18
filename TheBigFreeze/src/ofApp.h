@@ -44,6 +44,7 @@ public:
     bool                isFullscreen;
     bool                isGlitch;
     bool                isFreeScale;
+    bool                isVideoFinished;
     deque<float>        timeline;
     float               glitchOffset;
     
