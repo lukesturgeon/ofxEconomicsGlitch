@@ -118,14 +118,8 @@ void ofApp::update()
     }
     
     // ease back the animations
-    if (innerAnimatorA > 0.1){
-        innerAnimatorA += (innerA-innerAnimatorA) * animationDecay;
-    }
-    if (packAnimatorB > 0.1){
-        packAnimatorB += (packB-packAnimatorB) * animationDecay;
-//        cout << packAnimatorB << endl;
-    }
-    
+    innerAnimatorA += (innerA-innerAnimatorA) * animationDecay;
+    packAnimatorB += (packB-packAnimatorB) * animationDecay;
     heightBAnimator += (heightPrcB-heightBAnimator) * animationDecay;
 }
 
@@ -138,7 +132,8 @@ void ofApp::draw()
         // draw the glitched video B
         ofSetColor( tintB );
 //        drawGlitchedVideo(video, widthPrcB, heightBAnimator, internalFormats[ innerA ], formats[ packB ]);
-        drawGlitchedVideo(video, widthPrcB, heightPrcB, internalFormats[ int(innerAnimatorA) ], formats[ int(packAnimatorB) ]);
+//        drawGlitchedVideo(video, widthPrcB, heightPrcB, internalFormats[ int(innerAnimatorA) ], formats[ int(packAnimatorB) ]);
+        drawGlitchedVideo(video, widthPrcB, heightBAnimator, internalFormats[ innerA ], formats[ int(packAnimatorB) ]);
         
         // draw the glitched video A
         ofEnableBlendMode(OF_BLENDMODE_SCREEN);
@@ -232,10 +227,10 @@ void ofApp::onEconomicFall(float &difference)
     // maps the incoming number to an effect
     // 1 is the highest it could drop with the data provided
     // 0-0.99999 is a drop that's small than the max
-    cout << "drop with " << difference << endl;
-    innerAnimatorA = ofMap(abs(difference), 0.0f, 1.0f, innerA.getMin(), innerA.getMax());
-    packAnimatorB = ofMap(abs(difference), 0.0f, 1.0f, packB.getMin(), packB.getMax());
-    heightBAnimator = ofMap(abs(difference), 0.0f, 1.0f, heightPrcB.getMax(), heightPrcB.getMin());
+    cout << "drop with " << difference << ", (min)"<<economics.minValue<<", (max)"<<economics.maxValue<<endl;
+    innerAnimatorA = ofMap(difference, economics.minValue, economics.maxValue, innerA.getMin(), innerA.getMax());
+    packAnimatorB = ofMap(difference, economics.minValue, economics.maxValue, packB.getMin(), packB.getMax());
+    heightBAnimator = ofMap(difference, economics.minValue, economics.maxValue, heightPrcB.getMax(), heightPrcB.getMin());
 }
 
 //--------------------------------------------------------------

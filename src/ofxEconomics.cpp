@@ -60,20 +60,13 @@ void ofxEconomics::update()
             //            cout << "new value is " << n << endl;
             
             // check for increase or decrease based on the last value
-            if (n < data[NUM_DATA-2]) {
-                float maxDiff = maxValue-minValue;
-                float diff = maxValue-n;
-                float norm = ofMap(diff, 0, maxDiff, 0, 1);
-                
-                ofNotifyEvent(onEconomicFall, norm );
+            if (n < data[NUM_DATA-2])
+            {
+                ofNotifyEvent(onEconomicFall, n );
                 
             }
             else if (n > data[NUM_DATA-2])
             {
-                float maxDiff = maxValue-minValue;
-                float diff = maxValue-n;
-                float norm = ofMap(diff, 0, maxDiff, 0, 1);
-                
                 ofNotifyEvent(onEconomicRise, n);
             }
 		}
