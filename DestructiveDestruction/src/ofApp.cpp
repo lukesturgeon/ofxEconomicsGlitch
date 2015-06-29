@@ -49,7 +49,7 @@ int formats[] = {
 //--------------------------------------------------------------
 void ofApp::setup()
 {
-//    ofSetDataPathRoot("../Resources/data/");
+    ofSetDataPathRoot("../Resources/data/");
     
     ofSetWindowTitle("Destructive Destruction");
     ofSetVerticalSync(true);
@@ -87,7 +87,8 @@ void ofApp::setup()
     
     gui.add( animationDecay.setup("Elasticity", 0.005f, 0.0001f, 0.1f) );
     // Load the video file
-   	video.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/DestructiveDestruction.mp4");
+//   	video.loadMovie("/Users/lukesturgeon/Dropbox/4 - RCA/11 - Glitch Films/2 - Production/Assets/DestructiveDestruction.mp4");
+    video.loadMovie("DestructiveDestruction.mp4");
     video.setLoopState( OF_LOOP_NORMAL );
 	play();
 }
@@ -131,8 +132,10 @@ void ofApp::draw()
     if (isGlitch){
         // draw the glitched video B
         ofSetColor( tintB );
+//        drawGlitchedVideo(video, widthPrcB, heightPrcB, internalFormats[ innerA ], formats[ packB ]);
 //        drawGlitchedVideo(video, widthPrcB, heightBAnimator, internalFormats[ innerA ], formats[ packB ]);
-//        drawGlitchedVideo(video, widthPrcB, heightPrcB, internalFormats[ int(innerAnimatorA) ], formats[ int(packAnimatorB) ]);
+//        drawGlitchedVideo(video, widthPrcB, heightPrcB, internalFormats[ innerA ], formats[ int(packAnimatorB) ]);
+        
         drawGlitchedVideo(video, widthPrcB, heightBAnimator, internalFormats[ innerA ], formats[ int(packAnimatorB) ]);
         
         // draw the glitched video A

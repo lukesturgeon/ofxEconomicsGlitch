@@ -21,6 +21,7 @@
 		111E2A4D1B32E1170026968B /* ofxOscParameterSync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 111E2A3C1B32E1170026968B /* ofxOscParameterSync.cpp */; };
 		111E2A4E1B32E1170026968B /* ofxOscReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 111E2A3E1B32E1170026968B /* ofxOscReceiver.cpp */; };
 		111E2A4F1B32E1170026968B /* ofxOscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 111E2A401B32E1170026968B /* ofxOscSender.cpp */; };
+		1152F2931B39713200939B51 /* DestructiveDestruction.mp4 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1152F2921B39711E00939B51 /* DestructiveDestruction.mp4 */; };
 		11703B361B20DAB300CE370A /* ofxEconomics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11703B341B20DAB300CE370A /* ofxEconomics.cpp */; };
 		1191A3441B17A82800B0C2B7 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1191A3331B17A82800B0C2B7 /* ofxBaseGui.cpp */; };
 		1191A3451B17A82800B0C2B7 /* ofxButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1191A3351B17A82800B0C2B7 /* ofxButton.cpp */; };
@@ -75,6 +76,7 @@
 			dstPath = data;
 			dstSubfolderSpec = 7;
 			files = (
+				1152F2931B39713200939B51 /* DestructiveDestruction.mp4 in CopyFiles */,
 				BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -116,6 +118,7 @@
 		111E2A3F1B32E1170026968B /* ofxOscReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOscReceiver.h; sourceTree = "<group>"; };
 		111E2A401B32E1170026968B /* ofxOscSender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxOscSender.cpp; sourceTree = "<group>"; };
 		111E2A411B32E1170026968B /* ofxOscSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOscSender.h; sourceTree = "<group>"; };
+		1152F2921B39711E00939B51 /* DestructiveDestruction.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = DestructiveDestruction.mp4; path = bin/data/DestructiveDestruction.mp4; sourceTree = "<group>"; };
 		11703B341B20DAB300CE370A /* ofxEconomics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEconomics.cpp; sourceTree = "<group>"; };
 		11703B351B20DAB300CE370A /* ofxEconomics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEconomics.h; sourceTree = "<group>"; };
 		1191A32F1B17A22700B0C2B7 /* gutil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = gutil.h; path = ../../../libs/glut/lib/osx/GLUT.framework/Versions/A/Headers/gutil.h; sourceTree = "<group>"; };
@@ -404,6 +407,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				1152F2921B39711E00939B51 /* DestructiveDestruction.mp4 */,
 				1191A32F1B17A22700B0C2B7 /* gutil.h */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
@@ -714,7 +718,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = DestructiveDestructionDebug;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -803,7 +807,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = DestructiveDestruction;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
